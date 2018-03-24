@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_submit"
+        android:orderInCategory="100"
+        android:title="SUBMIT"
+        android:icon="@drawable/ic_check_black_24dp"
+        app:showAsAction="always"
+        android:iconTint="@color/icons"
+        android:iconTintMode="src_atop"/>
+
+    <item
+        android:id="@+id/action_cancel"
+        android:orderInCategory="101"
+        android:title="CANCEL"
+        android:icon="@drawable/ic_close_black_24dp"
+        app:showAsAction="ifRoom"
+        android:iconTint="@color/icons"
+        android:iconTintMode="src_atop" />
+</menu>

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1052707886234",
+    "firebase_url": "https://eventiquette-001.firebaseio.com",
+    "project_id": "eventiquette-001",
+    "storage_bucket": "eventiquette-001.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1052707886234:android:115c270e5ee6b3e7",
+        "android_client_info": {
+          "package_name": "com.frederictech.eventiquette"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1052707886234-3q01p3ebdd162sn0phssi0ffgh8bcadm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.frederictech.eventiquette",
+            "certificate_hash": "0d55a470877ba0ba917120dc88204a3df9c0fb6c"
+          }
+        },
+        {
+          "client_id": "1052707886234-42go6cs97adb8frrap3c8rd9aoqglc3j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmUqhpM9UcES1cr5CrMqRBU0Lod_nQ9ak"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1052707886234-42go6cs97adb8frrap3c8rd9aoqglc3j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.frederictech.eventiquette.AddEventActivity"
+    tools:showIn="@layout/activity_add_event">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="25dp">
+
+            <TextView
+                android:id="@+id/text_event_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="title"
+                android:textAllCaps="true"
+                android:textColor="@color/secondary_text" />
+
+            <EditText
+                android:id="@+id/edit_event_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:hint="Classy Art Exhibition" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="250dp">
+
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/map_event_location"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                app:liteMode="true"></com.google.android.gms.maps.MapView>
+
+            <Button
+                android:id="@+id/map_select_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"
+                android:text="select location"
+                android:textAllCaps="true" />
+
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="25dp">
+
+            <TextView
+                android:id="@+id/text_event_location"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="place"
+                android:textAllCaps="true"
+                android:textColor="@color/secondary_text" />
+
+            <EditText
+                android:id="@+id/edit_event_location"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:hint="Light Room Venue - Down Town" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>
