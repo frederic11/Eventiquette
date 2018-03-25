@@ -13,10 +13,8 @@ public class Event {
     private String      url;
     private String      numberOfPeopleInterested;
     private String      actualNumberOfAttendees;
-    private double      startDate;
-    private double      endDate;
-    private double      startTime;
-    private double      endTime;
+    private double      startDateTime;
+    private double      endDatetime;
     private boolean     isRecurrent;
     private boolean     isOnMonday;
     private boolean     isOnTuesday;
@@ -33,9 +31,8 @@ public class Event {
     private String      locationName;
     private float       locationLatitude;
     private float       locationLongitude;
-    private String      ageLimit;
+    private int         ageLimit;
     private String      reservationNumber;
-    private double      reservationDeadline;
     private String      ticketUrl;
     private String      isApproved;
     private String      isRejected;
@@ -121,36 +118,20 @@ public class Event {
         this.actualNumberOfAttendees = actualNumberOfAttendees;
     }
 
-    public double getStartDate() {
-        return startDate;
+    public double getStartDateTime() {
+        return startDateTime;
     }
 
-    public void setStartDate(double startDate) {
-        this.startDate = startDate;
+    public void setStartDateTime(double startDateTime) {
+        this.startDateTime = startDateTime;
     }
 
-    public double getEndDate() {
-        return endDate;
+    public double getEndDatetime() {
+        return endDatetime;
     }
 
-    public void setEndDate(double endDate) {
-        this.endDate = endDate;
-    }
-
-    public double getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(double startTime) {
-        this.startTime = startTime;
-    }
-
-    public double getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(double endTime) {
-        this.endTime = endTime;
+    public void setEndDatetime(double endDatetime) {
+        this.endDatetime = endDatetime;
     }
 
     public boolean isRecurrent() {
@@ -281,11 +262,11 @@ public class Event {
         this.locationLongitude = locationLongitude;
     }
 
-    public String getAgeLimit() {
+    public int getAgeLimit() {
         return ageLimit;
     }
 
-    public void setAgeLimit(String ageLimit) {
+    public void setAgeLimit(int ageLimit) {
         this.ageLimit = ageLimit;
     }
 
@@ -295,14 +276,6 @@ public class Event {
 
     public void setReservationNumber(String reservationNumber) {
         this.reservationNumber = reservationNumber;
-    }
-
-    public double getReservationDeadline() {
-        return reservationDeadline;
-    }
-
-    public void setReservationDeadline(double reservationDeadline) {
-        this.reservationDeadline = reservationDeadline;
     }
 
     public String getTicketUrl() {

@@ -13,4 +13,13 @@
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_add_event">AddEventActivity</string>
+
+    <string-array name="spinner_event_type_populate">
+        <item>Sports and Outdoor</item>
+        <item>Academic</item>
+        <item>Party</item>
+        <item>Exhibition</item>
+        <item>Concert</item>
+    </string-array>
+
 </resources>

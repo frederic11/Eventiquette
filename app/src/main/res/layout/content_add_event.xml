@@ -13,28 +13,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="25dp">
-
-            <TextView
-                android:id="@+id/text_event_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="title"
-                android:textAllCaps="true"
-                android:textColor="@color/secondary_text" />
-
-            <EditText
-                android:id="@+id/edit_event_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:hint="Classy Art Exhibition" />
-        </LinearLayout>
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="250dp">
@@ -53,15 +31,40 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="10dp"
                 android:text="select location"
-                android:textAllCaps="true" />
+                android:textAllCaps="true"
+                android:textColor="@color/icons"/>
 
         </RelativeLayout>
-
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="25dp">
+            android:layout_margin="16dp">
+
+            <TextView
+                android:id="@+id/text_event_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="title"
+                android:textAllCaps="true"
+                android:textColor="@color/secondary_text" />
+
+            <EditText
+                android:id="@+id/edit_event_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:hint="Classy Art Exhibition"
+                android:singleLine="true"
+                android:inputType="text"
+                android:layout_marginLeft="16dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp">
 
             <TextView
                 android:id="@+id/text_event_location"
@@ -77,8 +80,283 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:hint="Light Room Venue - Down Town" />
+                android:hint="Light Room Venue - Down Town"
+                android:singleLine="true"
+                android:inputType="text"
+                android:layout_marginLeft="16dp"/>
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp">
+
+            <TextView
+                android:id="@+id/text_event_short_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="brief"
+                android:textAllCaps="true"
+                android:textColor="@color/secondary_text" />
+
+            <EditText
+                android:id="@+id/edit_event_short_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:hint="Exhibition about Light vs Shadow"
+                android:singleLine="true"
+                android:inputType="text"
+                android:layout_marginLeft="16dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp">
+
+            <TextView
+                android:id="@+id/text_event_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="description"
+                android:textAllCaps="true"
+                android:textColor="@color/secondary_text" />
+
+            <EditText
+                android:id="@+id/edit_event_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:hint="Exhibition about Light vs Shadow and the amazing effect which it produce on the canvas."
+                android:inputType="textMultiLine"
+                android:layout_marginLeft="16dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp">
+
+            <TextView
+                android:id="@+id/text_event_type"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="type"
+                android:textAllCaps="true"
+                android:textColor="@color/secondary_text" />
+
+            <Spinner
+                android:id="@+id/spinner_event_type"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:entries="@array/spinner_event_type_populate"
+                android:layout_marginLeft="16dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp">
+
+            <TextView
+                android:id="@+id/text_event_website"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="website"
+                android:textAllCaps="true"
+                android:textColor="@color/secondary_text" />
+
+            <EditText
+                android:id="@+id/edit_event_website"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:hint="www.example.com"
+                android:singleLine="true"
+                android:inputType="textUri"
+                android:layout_marginLeft="16dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp">
+
+            <TextView
+                android:id="@+id/text_event_start_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Start Date"
+                android:textAllCaps="true"
+                android:textColor="@color/secondary_text" />
+
+            <TextView
+                android:id="@+id/text_event_start_date_picker"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="22-03-2017 23:59"
+                android:textColor="@color/primary_text"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground"
+                android:layout_marginLeft="16dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp">
+
+            <TextView
+                android:id="@+id/text_event_end_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="End Date"
+                android:textAllCaps="true"
+                android:textColor="@color/secondary_text" />
+
+            <TextView
+                android:id="@+id/text_event_end_date_picker"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="22-03-2017 23:59"
+                android:textColor="@color/primary_text"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground"
+                android:layout_marginLeft="16dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp">
+
+            <TextView
+                android:id="@+id/text_event_age_limit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="min age"
+                android:textAllCaps="true"
+                android:textColor="@color/secondary_text" />
+
+            <EditText
+                android:id="@+id/edit_event_age_limit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:hint="18"
+                android:singleLine="true"
+                android:inputType="number"
+                android:layout_marginLeft="16dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp">
+
+            <TextView
+                android:id="@+id/text_event_reservation_number"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Phone"
+                android:textAllCaps="true"
+                android:textColor="@color/secondary_text" />
+
+            <EditText
+                android:id="@+id/edit_event_reservation_number"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:hint="+961 76 123456"
+                android:singleLine="true"
+                android:inputType="phone"
+                android:layout_marginLeft="16dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp">
+
+            <TextView
+                android:id="@+id/text_event_ticket_url"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Ticketing"
+                android:textAllCaps="true"
+                android:textColor="@color/secondary_text" />
+
+            <EditText
+                android:id="@+id/edit_event_ticket_url"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:hint="www.ticketreservation.com"
+                android:singleLine="true"
+                android:inputType="textUri"
+                android:layout_marginLeft="16dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp">
+
+            <TextView
+                android:id="@+id/text_event_is_private"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="private"
+                android:textAllCaps="true"
+                android:textColor="@color/secondary_text" />
+
+            <Switch
+                android:id="@+id/switch_event_is_private"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:layout_marginStart="16dp"
+                android:layout_gravity="right"/>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="250dp">
+
+            <ImageView
+                android:id="@+id/image_view_event_image"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:background="@drawable/ic_launcher_background"></ImageView>
+
+            <Button
+                android:id="@+id/image_view_event_image_select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"
+                android:text="select photo"
+                android:textAllCaps="true"
+                android:textColor="@color/icons"/>
+
+        </RelativeLayout>
 
     </LinearLayout>
 
