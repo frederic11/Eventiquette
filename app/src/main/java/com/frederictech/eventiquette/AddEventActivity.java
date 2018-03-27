@@ -1,5 +1,6 @@
 package com.frederictech.eventiquette;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -66,6 +67,9 @@ public class AddEventActivity extends AppCompatActivity
     TextView textViewEndDatePicker;
     Button btnSelectPhoto;
     ImageView imageViewEventPhoto;
+
+    Date eventStartDate;
+    Date eventEndDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,7 +141,7 @@ public class AddEventActivity extends AppCompatActivity
         textViewEndDatePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                textViewStartDatePicker.setEnabled(false);
+                textViewEndDatePicker.setEnabled(false);
                 nDialog.show();
                 showEndDateTimePicker();
             }
@@ -190,6 +194,10 @@ public class AddEventActivity extends AppCompatActivity
             @Override
             public void onPositiveButtonClick(Date date) {
                 // Date is get on positive button click
+                eventStartDate = date;
+                eventEndDate = null;
+                textViewEndDatePicker.setEnabled(true);
+                textViewEndDatePicker.setText("");
                 textViewStartDatePicker.setEnabled(true);
                 nDialog.cancel();
                 textViewStartDatePicker.setText(myDateFormat.format(date));
@@ -215,13 +223,25 @@ public class AddEventActivity extends AppCompatActivity
                 "Cancel"
         );
 
+        if (eventStartDate == null) {
+            eventStartDate = new Date();
+        }
+
+        Calendar cal = Calendar.getInstance(); // creates calendar
+        cal.setTime(eventStartDate); // sets calendar time/date
+        cal.add(Calendar.HOUR_OF_DAY, 1); // adds one hour
+
+        Calendar cal2 = Calendar.getInstance(); // creates calendar
+        cal2.setTime(eventStartDate); // sets calendar time/date
+        cal2.add(Calendar.MINUTE, 15); // adds 15 minutes
+
         final SimpleDateFormat myDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm", java.util.Locale.getDefault());
         // Assign values
-        dateTimeDialogFragment.startAtCalendarView();
+        dateTimeDialogFragment.startAtTimeView();
         dateTimeDialogFragment.set24HoursMode(false);
-        dateTimeDialogFragment.setMinimumDateTime(new Date());
+        dateTimeDialogFragment.setMinimumDateTime(cal2.getTime());//eventStartDate + 15 minutes
         dateTimeDialogFragment.setMaximumDateTime(new GregorianCalendar(2050, Calendar.DECEMBER, 31).getTime());
-        dateTimeDialogFragment.setDefaultDateTime(new Date());
+        dateTimeDialogFragment.setDefaultDateTime(cal.getTime()); //eventStartDate + One hour
 
         // Define new day and month format
         try {
@@ -235,9 +255,15 @@ public class AddEventActivity extends AppCompatActivity
             @Override
             public void onPositiveButtonClick(Date date) {
                 // Date is get on positive button click
-                textViewStartDatePicker.setEnabled(true);
+                if (date.before(eventStartDate)) {
+                    eventEndDate = null;
+                    showSnackBar(AddEventActivity.this,"Event End Date can't be before it's Start Date.");
+                } else {
+                    eventEndDate = date;
+                    textViewEndDatePicker.setText(myDateFormat.format(date));
+                }
+                textViewEndDatePicker.setEnabled(true);
                 nDialog.cancel();
-                textViewEndDatePicker.setText(myDateFormat.format(date));
             }
 
             @Override
@@ -327,6 +353,11 @@ public class AddEventActivity extends AppCompatActivity
                 btnSelectPhoto.setEnabled(true);
             }
         }
+    }
+
+    public void showSnackBar(Activity activity, String message){
+        View rootView = activity.getWindow().getDecorView().findViewById(android.R.id.content);
+        Snackbar.make(rootView, message, Snackbar.LENGTH_LONG).show();
     }
 
     @Override

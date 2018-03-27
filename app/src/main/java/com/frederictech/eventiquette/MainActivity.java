@@ -110,6 +110,8 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_add_event) {
+            fab.setEnabled(false);
+            nDialog.show();
             startActivity(new Intent(MainActivity.this, AddEventActivity.class));
         } else if (id == R.id.nav_camera) {
             // Handle the camera action
