@@ -190,6 +190,29 @@
             android:layout_margin="16dp">
 
             <TextView
+                android:id="@+id/text_event_is_recurrent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="recurrent"
+                android:textAllCaps="true"
+                android:textColor="@color/secondary_text" />
+
+            <Switch
+                android:id="@+id/switch_event_is_recurrent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:layout_marginStart="16dp"
+                android:layout_gravity="right"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp">
+
+            <TextView
                 android:id="@+id/text_event_start_date"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -229,6 +252,135 @@
 
             <TextView
                 android:id="@+id/text_event_end_date_picker"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:hint="22-03-2017 23:59"
+                android:textColor="?attr/editTextColor"
+                android:background="?attr/editTextBackground"
+                android:gravity="center_vertical"
+                android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
+                android:clickable="true"
+                android:focusable="true"
+                android:enabled="false"
+                android:layout_marginLeft="16dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp">
+
+            <TextView
+                android:id="@+id/text_event_recurrent_every"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="every"
+                android:layout_gravity="center"
+                android:textAllCaps="true"
+                android:textColor="@color/secondary_text" />
+
+            <com.nex3z.togglebuttongroup.SingleSelectToggleGroup
+                android:id="@+id/single_select_group_recurrence_choices"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:tbgCheckedButton="@+id/toggle_button_every_day"
+                android:layout_weight="3"
+                android:layout_marginLeft="16dp">
+
+                <com.nex3z.togglebuttongroup.button.CircularToggle
+                    android:id="@+id/toggle_button_every_day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:tbgMarkerColor="@color/colorAccent"
+                    android:text="Day"/>
+
+                <com.nex3z.togglebuttongroup.button.CircularToggle
+                    android:id="@+id/toggle_button_every_week"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:tbgMarkerColor="@color/colorAccent"
+                    android:text="Week"
+                    android:layout_marginLeft="24dp"/>
+
+            </com.nex3z.togglebuttongroup.SingleSelectToggleGroup>
+        </LinearLayout>
+
+        <com.nex3z.togglebuttongroup.MultiSelectToggleGroup
+            android:id="@+id/muliselect_group_weekdays"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tbgChildSpacing="auto"
+            android:layout_margin="16dp">
+
+            <com.nex3z.togglebuttongroup.button.CircularToggle
+                android:id="@+id/toggle_button_monday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:tbgMarkerColor="@color/colorAccent"
+                android:text="M" />
+
+            <com.nex3z.togglebuttongroup.button.CircularToggle
+                android:id="@+id/toggle_button_tuesday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:tbgMarkerColor="@color/colorAccent"
+                android:text="T"/>
+
+            <com.nex3z.togglebuttongroup.button.CircularToggle
+                android:id="@+id/toggle_button_wednesday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:tbgMarkerColor="@color/colorAccent"
+                android:text="W"/>
+
+            <com.nex3z.togglebuttongroup.button.CircularToggle
+                android:id="@+id/toggle_button_thurday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:tbgMarkerColor="@color/colorAccent"
+                android:text="Th"/>
+
+            <com.nex3z.togglebuttongroup.button.CircularToggle
+                android:id="@+id/toggle_button_friday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:tbgMarkerColor="@color/colorAccent"
+                android:text="F"/>
+
+            <com.nex3z.togglebuttongroup.button.CircularToggle
+                android:id="@+id/toggle_button_saturday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:tbgMarkerColor="@color/colorAccent"
+                android:text="S"/>
+
+            <com.nex3z.togglebuttongroup.button.CircularToggle
+                android:id="@+id/toggle_button_sunday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:tbgMarkerColor="@color/colorAccent"
+                android:text="Su"/>
+
+        </com.nex3z.togglebuttongroup.MultiSelectToggleGroup>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp">
+
+            <TextView
+                android:id="@+id/text_event_until_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="until"
+                android:textAllCaps="true"
+                android:textColor="@color/secondary_text" />
+
+            <TextView
+                android:id="@+id/text_event_until_date_picker"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
