@@ -14,11 +14,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Checkable;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 
 import com.facebook.login.Login;
@@ -36,6 +41,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment;
+import com.nex3z.togglebuttongroup.MultiSelectToggleGroup;
+import com.nex3z.togglebuttongroup.button.OnCheckedChangeListener;
 import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
@@ -65,11 +72,23 @@ public class AddEventActivity extends AppCompatActivity
     EditText editTextEventLocationName;
     TextView textViewStartDatePicker;
     TextView textViewEndDatePicker;
+    TextView textViewUntilDatePicker;
     Button btnSelectPhoto;
     ImageView imageViewEventPhoto;
+    Switch switchEventIsRecurrent;
+
+    LinearLayout linearLayoutEndDate;
+    LinearLayout linearLayoutUntilDate;
+    LinearLayout linearLayoutRecurrentEvery;
+    MultiSelectToggleGroup muliselectGroupWeekdays;
+
+    com.nex3z.togglebuttongroup.button.CircularToggle toggleButtonDay;
+    com.nex3z.togglebuttongroup.button.CircularToggle toggleButtonWeek;
+
 
     Date eventStartDate;
     Date eventEndDate;
+    Date eventUntilDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +97,14 @@ public class AddEventActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Add Event");
+
+        linearLayoutEndDate = (LinearLayout) findViewById(R.id.linear_layout_end_date);
+        linearLayoutUntilDate = (LinearLayout) findViewById(R.id.linear_layout_until_date);
+        linearLayoutRecurrentEvery = (LinearLayout) findViewById(R.id.linear_layout_recurrent_every);
+        muliselectGroupWeekdays = (MultiSelectToggleGroup) findViewById(R.id.muliselect_group_weekdays);
+        toggleButtonDay = (com.nex3z.togglebuttongroup.button.CircularToggle) findViewById(R.id.toggle_button_every_day);
+        toggleButtonWeek = (com.nex3z.togglebuttongroup.button.CircularToggle) findViewById(R.id.toggle_button_every_week);
+        HideRecurrentEventSection();
 
         // Gets the MapView from the XML layout and creates it
         eventLocationMap = (MapView) findViewById(R.id.map_event_location);
@@ -91,14 +118,55 @@ public class AddEventActivity extends AppCompatActivity
         editTextEventLocationName = (EditText) findViewById(R.id.edit_event_location);
         textViewStartDatePicker = (TextView) findViewById(R.id.text_event_start_date_picker);
         textViewEndDatePicker = (TextView) findViewById(R.id.text_event_end_date_picker);
+        textViewUntilDatePicker = (TextView) findViewById(R.id.text_event_until_date_picker);
         btnSelectPhoto = (Button) findViewById(R.id.image_view_event_image_select);
         imageViewEventPhoto = (ImageView) findViewById(R.id.image_view_event_image);
+        switchEventIsRecurrent = (Switch) findViewById(R.id.switch_event_is_recurrent);
 
 
         nDialog = new ProgressDialog(AddEventActivity.this);
         nDialog.setMessage("Loading...");
         nDialog.setIndeterminate(true);
         nDialog.setCancelable(false);
+
+        switchEventIsRecurrent.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    toggleButtonDay.setChecked(true);
+                    ShowRecurrentEventSection();
+                }
+                else{
+                    HideRecurrentEventSection();
+                }
+            }
+        });
+
+        toggleButtonDay.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            @Override
+            public <T extends View & Checkable> void onCheckedChanged(T view, boolean isChecked) {
+                if(isChecked){
+                    toggleButtonWeek.setChecked(false);
+                    muliselectGroupWeekdays.setVisibility(View.GONE);
+                } else {
+                    toggleButtonWeek.setChecked(true);
+                    muliselectGroupWeekdays.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        toggleButtonWeek.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            @Override
+            public <T extends View & Checkable> void onCheckedChanged(T view, boolean isChecked) {
+                if(isChecked){
+                    toggleButtonDay.setChecked(false);
+                    muliselectGroupWeekdays.setVisibility(View.VISIBLE);
+                } else {
+                    toggleButtonDay.setChecked(true);
+                    muliselectGroupWeekdays.setVisibility(View.GONE);
+                }
+            }
+        });
 
         btnSelectLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,6 +214,28 @@ public class AddEventActivity extends AppCompatActivity
                 showEndDateTimePicker();
             }
         });
+
+        textViewUntilDatePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                textViewUntilDatePicker.setEnabled(false);
+                nDialog.show();
+                showUntilDateTimePicker();
+            }
+        });
+    }
+
+    private void ShowRecurrentEventSection() {
+        linearLayoutEndDate.setVisibility(View.GONE);
+        linearLayoutRecurrentEvery.setVisibility(View.VISIBLE);
+        linearLayoutUntilDate.setVisibility(View.VISIBLE);
+    }
+
+    private void HideRecurrentEventSection() {
+        linearLayoutEndDate.setVisibility(View.VISIBLE);
+        linearLayoutRecurrentEvery.setVisibility(View.GONE);
+        muliselectGroupWeekdays.setVisibility(View.GONE);
+        linearLayoutUntilDate.setVisibility(View.GONE);
     }
 
     private void PerformFileSearch() {
@@ -196,8 +286,11 @@ public class AddEventActivity extends AppCompatActivity
                 // Date is get on positive button click
                 eventStartDate = date;
                 eventEndDate = null;
+                eventUntilDate = null;
                 textViewEndDatePicker.setEnabled(true);
                 textViewEndDatePicker.setText("");
+                textViewUntilDatePicker.setEnabled(true);
+                textViewUntilDatePicker.setText("");
                 textViewStartDatePicker.setEnabled(true);
                 nDialog.cancel();
                 textViewStartDatePicker.setText(myDateFormat.format(date));
@@ -270,6 +363,68 @@ public class AddEventActivity extends AppCompatActivity
             public void onNegativeButtonClick(Date date) {
                 // Date is get on negative button click
                 textViewEndDatePicker.setEnabled(true);
+                nDialog.cancel();
+            }
+        });
+
+
+        dateTimeDialogFragment.show(getSupportFragmentManager(), "dialog_time");
+    }
+
+    private void showUntilDateTimePicker() {// Initialize DateTimePicker Start
+        SwitchDateTimeDialogFragment dateTimeDialogFragment = SwitchDateTimeDialogFragment.newInstance(
+                "Event Until Date",
+                "OK",
+                "Cancel"
+        );
+
+        if (eventStartDate == null) {
+            eventStartDate = new Date();
+        }
+
+        Calendar cal = Calendar.getInstance(); // creates calendar
+        cal.setTime(eventStartDate); // sets calendar time/date
+        cal.add(Calendar.DAY_OF_MONTH, 3); // adds 3 days
+
+        Calendar cal2 = Calendar.getInstance(); // creates calendar
+        cal2.setTime(eventStartDate); // sets calendar time/date
+        cal2.add(Calendar.DAY_OF_MONTH, 1); // adds 1 days
+
+        final SimpleDateFormat myDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm", java.util.Locale.getDefault());
+        // Assign values
+        dateTimeDialogFragment.startAtCalendarView();
+        dateTimeDialogFragment.set24HoursMode(false);
+        dateTimeDialogFragment.setMinimumDateTime(cal2.getTime());//eventStartDate + 15 minutes
+        dateTimeDialogFragment.setMaximumDateTime(new GregorianCalendar(2050, Calendar.DECEMBER, 31).getTime());
+        dateTimeDialogFragment.setDefaultDateTime(cal.getTime()); //eventStartDate + One hour
+
+        // Define new day and month format
+        try {
+            dateTimeDialogFragment.setSimpleDateMonthAndDayFormat(new SimpleDateFormat("MM yyyy", Locale.getDefault()));
+        } catch (SwitchDateTimeDialogFragment.SimpleDateMonthAndDayFormatException e) {
+            Log.e("dateTimeDialogFragment", e.getMessage());
+        }
+
+        // Set listener
+        dateTimeDialogFragment.setOnButtonClickListener(new SwitchDateTimeDialogFragment.OnButtonClickListener() {
+            @Override
+            public void onPositiveButtonClick(Date date) {
+                // Date is get on positive button click
+                if (date.before(eventStartDate)) {
+                    eventUntilDate = null;
+                    showSnackBar(AddEventActivity.this,"Event End Date can't be before it's Start Date.");
+                } else {
+                    eventUntilDate = date;
+                    textViewUntilDatePicker.setText(myDateFormat.format(date));
+                }
+                textViewUntilDatePicker.setEnabled(true);
+                nDialog.cancel();
+            }
+
+            @Override
+            public void onNegativeButtonClick(Date date) {
+                // Date is get on negative button click
+                textViewUntilDatePicker.setEnabled(true);
                 nDialog.cancel();
             }
         });

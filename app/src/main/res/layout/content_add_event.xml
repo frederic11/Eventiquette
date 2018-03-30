@@ -239,7 +239,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp">
+            android:layout_margin="16dp"
+            android:id="@+id/linear_layout_end_date">
 
             <TextView
                 android:id="@+id/text_event_end_date"
@@ -269,7 +270,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp">
+            android:layout_margin="16dp"
+            android:id="@+id/linear_layout_recurrent_every">
 
             <TextView
                 android:id="@+id/text_event_recurrent_every"
@@ -368,7 +370,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp">
+            android:layout_margin="16dp"
+            android:id="@+id/linear_layout_until_date">
 
             <TextView
                 android:id="@+id/text_event_until_date"
