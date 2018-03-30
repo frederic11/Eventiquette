@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,6 +41,8 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.i18n.phonenumbers.AsYouTypeFormatter;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment;
 import com.nex3z.togglebuttongroup.MultiSelectToggleGroup;
 import com.nex3z.togglebuttongroup.button.OnCheckedChangeListener;
@@ -76,6 +79,7 @@ public class AddEventActivity extends AppCompatActivity
     Button btnSelectPhoto;
     ImageView imageViewEventPhoto;
     Switch switchEventIsRecurrent;
+    EditText editTextEventReservationNumber;
 
     LinearLayout linearLayoutEndDate;
     LinearLayout linearLayoutUntilDate;
@@ -97,6 +101,9 @@ public class AddEventActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Add Event");
+
+        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+        AsYouTypeFormatter formatter = phoneUtil.getAsYouTypeFormatter("LB");
 
         linearLayoutEndDate = (LinearLayout) findViewById(R.id.linear_layout_end_date);
         linearLayoutUntilDate = (LinearLayout) findViewById(R.id.linear_layout_until_date);
@@ -122,12 +129,15 @@ public class AddEventActivity extends AppCompatActivity
         btnSelectPhoto = (Button) findViewById(R.id.image_view_event_image_select);
         imageViewEventPhoto = (ImageView) findViewById(R.id.image_view_event_image);
         switchEventIsRecurrent = (Switch) findViewById(R.id.switch_event_is_recurrent);
+        editTextEventReservationNumber = (EditText) findViewById(R.id.edit_event_reservation_number);
 
 
         nDialog = new ProgressDialog(AddEventActivity.this);
         nDialog.setMessage("Loading...");
         nDialog.setIndeterminate(true);
         nDialog.setCancelable(false);
+
+        editTextEventReservationNumber.addTextChangedListener(new PhoneNumberFormattingTextWatcher("LB"));
 
         switchEventIsRecurrent.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

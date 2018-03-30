@@ -59,7 +59,8 @@
                 android:hint="Classy Art Exhibition"
                 android:singleLine="true"
                 android:inputType="text"
-                android:layout_marginLeft="16dp"/>
+                android:layout_marginLeft="16dp"
+                android:maxLength="100"/>
         </LinearLayout>
 
         <LinearLayout
@@ -84,7 +85,8 @@
                 android:hint="Light Room Venue - Down Town"
                 android:singleLine="true"
                 android:inputType="text"
-                android:layout_marginLeft="16dp"/>
+                android:layout_marginLeft="16dp"
+                android:maxLength="100"/>
         </LinearLayout>
 
         <LinearLayout
@@ -109,7 +111,8 @@
                 android:hint="Exhibition about Light vs Shadow"
                 android:singleLine="true"
                 android:inputType="text"
-                android:layout_marginLeft="16dp"/>
+                android:layout_marginLeft="16dp"
+                android:maxLength="140"/>
         </LinearLayout>
 
         <LinearLayout
@@ -133,7 +136,8 @@
                 android:layout_weight="3"
                 android:hint="Exhibition about Light vs Shadow and the amazing effect which it produce on the canvas."
                 android:inputType="textMultiLine"
-                android:layout_marginLeft="16dp"/>
+                android:layout_marginLeft="16dp"
+                android:maxLength="4000"/>
         </LinearLayout>
 
         <LinearLayout
@@ -181,7 +185,8 @@
                 android:hint="www.example.com"
                 android:singleLine="true"
                 android:inputType="textUri"
-                android:layout_marginLeft="16dp"/>
+                android:layout_marginLeft="16dp"
+                android:maxLength="50"/>
         </LinearLayout>
 
         <LinearLayout
@@ -420,7 +425,8 @@
                 android:hint="18"
                 android:singleLine="true"
                 android:inputType="number"
-                android:layout_marginLeft="16dp"/>
+                android:layout_marginLeft="16dp"
+                android:maxLength="2"/>
         </LinearLayout>
 
         <LinearLayout
@@ -445,7 +451,8 @@
                 android:hint="+961 76 123456"
                 android:singleLine="true"
                 android:inputType="phone"
-                android:layout_marginLeft="16dp"/>
+                android:layout_marginLeft="16dp"
+                android:maxLength="20"/>
         </LinearLayout>
 
         <LinearLayout
@@ -470,7 +477,8 @@
                 android:hint="www.ticketreservation.com"
                 android:singleLine="true"
                 android:inputType="textUri"
-                android:layout_marginLeft="16dp"/>
+                android:layout_marginLeft="16dp"
+                android:maxLength="50"/>
         </LinearLayout>
 
         <LinearLayout
