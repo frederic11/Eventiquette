@@ -2,11 +2,16 @@ package com.frederictech.eventiquette;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneNumberFormattingTextWatcher;
@@ -20,15 +25,11 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ToggleButton;
 
 
-import com.facebook.login.Login;
-import com.facebook.places.Places;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -37,23 +38,16 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.i18n.phonenumbers.AsYouTypeFormatter;
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.firebase.auth.FirebaseAuth;
 import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment;
 import com.nex3z.togglebuttongroup.MultiSelectToggleGroup;
 import com.nex3z.togglebuttongroup.button.OnCheckedChangeListener;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -65,11 +59,32 @@ public class AddEventActivity extends AppCompatActivity
     int PLACE_PICKER_REQUEST = 200;
     int READ_REQUEST_CODE = 300;
 
+    Context context;
+
     MapView eventLocationMap;
     GoogleMap map;
     Marker mNDUFacultyOfScienceMarker;
     Marker mUserLocationMarker;
+    Drawable initialBtnSelectLocationBackgroundDrawable;
     ProgressDialog nDialog;
+
+    LatLng userSelectedPlaceLatLng = null;
+
+    EditText editTextEventTitle;
+    EditText editTextEventShortDescription;
+    EditText editTextEventDescription;
+    Spinner spinnerEventType;
+    EditText editTextEventWebsite;
+    com.nex3z.togglebuttongroup.button.CircularToggle toggleIsMonday;
+    com.nex3z.togglebuttongroup.button.CircularToggle toggleIsTuesday;
+    com.nex3z.togglebuttongroup.button.CircularToggle toggleIsWednesday;
+    com.nex3z.togglebuttongroup.button.CircularToggle toggleIsThursday;
+    com.nex3z.togglebuttongroup.button.CircularToggle toggleIsFriday;
+    com.nex3z.togglebuttongroup.button.CircularToggle toggleIsSaturday;
+    com.nex3z.togglebuttongroup.button.CircularToggle toggleIsSunday;
+    EditText editTextAgeLimit;
+    EditText editTextTicketingUrl;
+    Switch switchIsPrivate;
 
     Button btnSelectLocation;
     EditText editTextEventLocationName;
@@ -102,13 +117,12 @@ public class AddEventActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Add Event");
 
-        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-        AsYouTypeFormatter formatter = phoneUtil.getAsYouTypeFormatter("LB");
+        context = this;
 
         linearLayoutEndDate = (LinearLayout) findViewById(R.id.linear_layout_end_date);
         linearLayoutUntilDate = (LinearLayout) findViewById(R.id.linear_layout_until_date);
         linearLayoutRecurrentEvery = (LinearLayout) findViewById(R.id.linear_layout_recurrent_every);
-        muliselectGroupWeekdays = (MultiSelectToggleGroup) findViewById(R.id.muliselect_group_weekdays);
+        muliselectGroupWeekdays = (MultiSelectToggleGroup) findViewById(R.id.multiselect_group_weekdays);
         toggleButtonDay = (com.nex3z.togglebuttongroup.button.CircularToggle) findViewById(R.id.toggle_button_every_day);
         toggleButtonWeek = (com.nex3z.togglebuttongroup.button.CircularToggle) findViewById(R.id.toggle_button_every_week);
         HideRecurrentEventSection();
@@ -130,12 +144,29 @@ public class AddEventActivity extends AppCompatActivity
         imageViewEventPhoto = (ImageView) findViewById(R.id.image_view_event_image);
         switchEventIsRecurrent = (Switch) findViewById(R.id.switch_event_is_recurrent);
         editTextEventReservationNumber = (EditText) findViewById(R.id.edit_event_reservation_number);
+        editTextEventTitle = (EditText) findViewById(R.id.edit_event_title);
+        editTextEventShortDescription = (EditText) findViewById(R.id.edit_event_short_description);
+        editTextEventDescription = (EditText) findViewById(R.id.edit_event_description);
+        spinnerEventType = (Spinner) findViewById(R.id.spinner_event_type);
+        editTextEventWebsite = (EditText) findViewById(R.id.edit_event_website);
+        toggleIsMonday = (com.nex3z.togglebuttongroup.button.CircularToggle) findViewById(R.id.toggle_button_monday);
+        toggleIsTuesday = (com.nex3z.togglebuttongroup.button.CircularToggle) findViewById(R.id.toggle_button_tuesday);
+        toggleIsWednesday = (com.nex3z.togglebuttongroup.button.CircularToggle) findViewById(R.id.toggle_button_wednesday);
+        toggleIsThursday = (com.nex3z.togglebuttongroup.button.CircularToggle) findViewById(R.id.toggle_button_thurday);
+        toggleIsFriday = (com.nex3z.togglebuttongroup.button.CircularToggle) findViewById(R.id.toggle_button_friday);
+        toggleIsSaturday = (com.nex3z.togglebuttongroup.button.CircularToggle) findViewById(R.id.toggle_button_saturday);
+        toggleIsSunday = (com.nex3z.togglebuttongroup.button.CircularToggle) findViewById(R.id.toggle_button_sunday);
+        editTextAgeLimit = (EditText) findViewById(R.id.edit_event_age_limit);
+        editTextTicketingUrl = (EditText) findViewById(R.id.edit_event_ticket_url);
+        switchIsPrivate = (Switch) findViewById(R.id.switch_event_is_private);
 
 
         nDialog = new ProgressDialog(AddEventActivity.this);
         nDialog.setMessage("Loading...");
         nDialog.setIndeterminate(true);
         nDialog.setCancelable(false);
+
+        initialBtnSelectLocationBackgroundDrawable = btnSelectLocation.getBackground();
 
         editTextEventReservationNumber.addTextChangedListener(new PhoneNumberFormattingTextWatcher("LB"));
 
@@ -459,13 +490,177 @@ public class AddEventActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_submit) {
-            return true;
-        }
-        if (id == R.id.action_cancel) {
+            findViewById(id).setEnabled(false);
+            nDialog.show();
+            SubmitEventForApproval();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void SubmitEventForApproval() {
+        boolean isValid = true;
+        Event userEvent = new Event();
+
+        if (userSelectedPlaceLatLng != null){
+            userEvent.setLocationLatitude(userSelectedPlaceLatLng.latitude);
+            userEvent.setLocationLongitude(userSelectedPlaceLatLng.longitude);
+            btnSelectLocation.setBackground(initialBtnSelectLocationBackgroundDrawable);
+        } else {
+            isValid = false;
+            btnSelectLocation.setBackgroundColor(Color.RED);
+        }
+
+        if (editTextEventTitle != null && !editTextEventTitle.getText().toString().trim().equals("") ) {
+            userEvent.setTitle(editTextEventTitle.getText().toString().trim());
+            editTextEventTitle.setError(null);
+        } else {
+            isValid = false;
+            editTextEventTitle.setError("This field can't be Empty");
+        }
+
+        if (editTextEventLocationName != null && !editTextEventLocationName.getText().toString().trim().equals("") ) {
+            userEvent.setLocationName(editTextEventLocationName.getText().toString().trim());
+            editTextEventLocationName.setError(null);
+        } else {
+            isValid = false;
+            editTextEventLocationName.setError("This field can't be Empty");
+        }
+
+        if (editTextEventShortDescription != null && !editTextEventShortDescription.getText().toString().trim().equals("") ) {
+            userEvent.setShortDescription(editTextEventShortDescription.getText().toString().trim());
+            editTextEventShortDescription.setError(null);
+        } else {
+            isValid = false;
+            editTextEventShortDescription.setError("This field can't be Empty");
+        }
+
+        if (editTextEventDescription != null && !editTextEventDescription.getText().toString().trim().equals("") ) {
+            userEvent.setDescription(editTextEventDescription.getText().toString().trim());
+            editTextEventDescription.setError(null);
+        } else {
+            isValid = false;
+            editTextEventDescription.setError("This field can't be Empty");
+        }
+
+        if (spinnerEventType != null && !spinnerEventType.getSelectedItem().toString().trim().equals("") ) {
+            userEvent.setType(spinnerEventType.getSelectedItem().toString().trim());
+        } else {
+            isValid = false;
+        }
+
+        if (editTextEventWebsite != null && !editTextEventWebsite.getText().toString().trim().equals("") ) {
+            userEvent.setUrl(editTextEventWebsite.getText().toString().trim());
+        }
+
+        if (switchEventIsRecurrent != null && switchEventIsRecurrent.isChecked()){
+            userEvent.setRecurrent(true);
+        } else if (switchEventIsRecurrent != null && !switchEventIsRecurrent.isChecked()) {
+            userEvent.setRecurrent(false);
+        }
+
+        if (eventStartDate != null) {
+            userEvent.setStartDateTime(eventStartDate.getTime());
+            textViewStartDatePicker.setError(null);
+        } else {
+            textViewStartDatePicker.setError("Please Select a Date");
+            isValid = false;
+        }
+
+        if (eventEndDate != null && !switchEventIsRecurrent.isChecked()) {
+            userEvent.setEndDatetime(eventEndDate.getTime());
+            textViewEndDatePicker.setError(null);
+        } else if (eventEndDate == null && !switchEventIsRecurrent.isChecked()) {
+            textViewEndDatePicker.setError("Please Select a Date");
+            isValid = false;
+        }
+
+        if (eventUntilDate != null && switchEventIsRecurrent.isChecked()) {
+            userEvent.setUntilDateTime(eventUntilDate.getTime());
+            textViewUntilDatePicker.setError(null);
+        } else if (eventUntilDate == null && switchEventIsRecurrent.isChecked()) {
+            textViewUntilDatePicker.setError("Please Select a Date");
+            isValid = false;
+        }
+
+        if (toggleButtonDay != null && toggleButtonDay.isChecked()){
+            userEvent.setDaily(true);
+            userEvent.setWeekly(false);
+        } else if (toggleButtonWeek != null && toggleButtonWeek.isChecked()){
+            userEvent.setWeekly(true);
+            userEvent.setDaily(false);
+        }
+
+        if (toggleButtonWeek.isChecked() && !toggleIsMonday.isChecked() && !toggleIsTuesday.isChecked()
+                && !toggleIsWednesday.isChecked() && !toggleIsThursday.isChecked() && !toggleIsFriday.isChecked()
+                && !toggleIsSaturday.isChecked() && !toggleIsSunday.isChecked()){
+            findViewById(R.id.multiselect_group_weekdays).setBackgroundColor(Color.parseColor("#F44336"));
+            isValid = false;
+        } else {
+            findViewById(R.id.multiselect_group_weekdays).setBackgroundColor(Color.TRANSPARENT);
+        }
+
+        userEvent.setOnMonday(toggleIsMonday.isChecked());
+        userEvent.setOnTuesday(toggleIsTuesday.isChecked());
+        userEvent.setOnWednesday(toggleIsWednesday.isChecked());
+        userEvent.setOnThursday(toggleIsThursday.isChecked());
+        userEvent.setOnFriday(toggleIsFriday.isChecked());
+        userEvent.setOnSaturday(toggleIsSaturday.isChecked());
+        userEvent.setOnSunday(toggleIsSunday.isChecked());
+
+        if (editTextAgeLimit != null && !editTextAgeLimit.getText().toString().trim().equals("") ) {
+            try{
+                userEvent.setAgeLimit(Integer.parseInt(editTextAgeLimit.getText().toString().trim()));
+            } catch (Exception ex){
+                userEvent.setAgeLimit(0);
+            }
+        } else {
+            userEvent.setAgeLimit(0);
+        }
+
+        if (editTextEventReservationNumber != null && !editTextEventReservationNumber.getText().toString().trim().equals("") ) {
+            userEvent.setReservationNumber(editTextEventReservationNumber.getText().toString().trim());
+            editTextEventReservationNumber.setError(null);
+        } else {
+            isValid = false;
+            editTextEventReservationNumber.setError("This field can't be Empty");
+        }
+
+        if (editTextTicketingUrl != null && !editTextTicketingUrl.getText().toString().trim().equals("") ) {
+            userEvent.setTicketUrl(editTextTicketingUrl.getText().toString().trim());
+        }
+
+        if(switchIsPrivate != null)
+            userEvent.setPrivate(switchIsPrivate.isChecked());
+
+        findViewById(R.id.action_submit).setEnabled(true);
+        nDialog.cancel();
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() != null){
+            userEvent.setCreatedBy(auth.getCurrentUser().getUid());
+        }
+
+        userEvent.setCreatedDate(new Date().getTime());
+
+        if(isValid){
+            ShowConfirmationDialogue();
+        }
+    }
+
+    private void ShowConfirmationDialogue() {
+        AlertDialog.Builder builder;
+        builder = new AlertDialog.Builder(context);
+        builder.setTitle("Event Submitted for Approval")
+                .setMessage("Thank you for creating an Event. Your Event has been submitted for approval.\n\n" +
+                        "You will receive a notification when this Event gets Accepted or Rejected.")
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .show();
     }
 
     @Override
@@ -483,6 +678,7 @@ public class AddEventActivity extends AppCompatActivity
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(this, data);
+                userSelectedPlaceLatLng = place.getLatLng();
                 mNDUFacultyOfScienceMarker.remove();
                 if(mUserLocationMarker != null)
                     mUserLocationMarker.remove();

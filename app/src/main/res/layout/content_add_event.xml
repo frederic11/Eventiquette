@@ -182,7 +182,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:hint="www.example.com"
+                android:hint="www.example.com (Optional)"
                 android:singleLine="true"
                 android:inputType="textUri"
                 android:layout_marginLeft="16dp"
@@ -315,7 +315,7 @@
         </LinearLayout>
 
         <com.nex3z.togglebuttongroup.MultiSelectToggleGroup
-            android:id="@+id/muliselect_group_weekdays"
+            android:id="@+id/multiselect_group_weekdays"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tbgChildSpacing="auto"
@@ -422,7 +422,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:hint="18"
+                android:hint="18 (Optional)"
                 android:singleLine="true"
                 android:inputType="number"
                 android:layout_marginLeft="16dp"
@@ -474,7 +474,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:hint="www.ticketreservation.com"
+                android:hint="www.ticketreservation.com (Optional)"
                 android:singleLine="true"
                 android:inputType="textUri"
                 android:layout_marginLeft="16dp"

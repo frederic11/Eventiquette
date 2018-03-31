@@ -15,6 +15,7 @@ public class Event {
     private String      actualNumberOfAttendees;
     private double      startDateTime;
     private double      endDatetime;
+    private double      untilDateTime;
     private boolean     isRecurrent;
     private boolean     isOnMonday;
     private boolean     isOnTuesday;
@@ -25,12 +26,9 @@ public class Event {
     private boolean     isOnSunday;
     private boolean     isDaily;
     private boolean     isWeekly;
-    private boolean     isBiweekly;
-    private boolean     isMonthly;
-    private boolean     isYearly;
     private String      locationName;
-    private float       locationLatitude;
-    private float       locationLongitude;
+    private double      locationLatitude;
+    private double      locationLongitude;
     private int         ageLimit;
     private String      reservationNumber;
     private String      ticketUrl;
@@ -63,11 +61,11 @@ public class Event {
     }
 
     public String getTitle() {
-        return title;
+        return  title;
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.title = title.substring(0, Math.min(title.length(), 100));
     }
 
     public String getShortDescription() {
@@ -75,7 +73,7 @@ public class Event {
     }
 
     public void setShortDescription(String shortDescription) {
-        this.shortDescription = shortDescription;
+        this.shortDescription = shortDescription.substring(0, Math.min(shortDescription.length(), 140));
     }
 
     public String getDescription() {
@@ -83,7 +81,7 @@ public class Event {
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        this.description = description.substring(0, Math.min(description.length(), 4000));
     }
 
     public String getType() {
@@ -99,7 +97,7 @@ public class Event {
     }
 
     public void setUrl(String url) {
-        this.url = url;
+        this.url = url.substring(0, Math.min(url.length(), 50));
     }
 
     public String getNumberOfPeopleInterested() {
@@ -132,6 +130,14 @@ public class Event {
 
     public void setEndDatetime(double endDatetime) {
         this.endDatetime = endDatetime;
+    }
+
+    public double getUntilDateTime() {
+        return untilDateTime;
+    }
+
+    public void setUntilDateTime(double untilDateTime) {
+        this.untilDateTime = untilDateTime;
     }
 
     public boolean isRecurrent() {
@@ -214,51 +220,27 @@ public class Event {
         isWeekly = weekly;
     }
 
-    public boolean isBiweekly() {
-        return isBiweekly;
-    }
-
-    public void setBiweekly(boolean biweekly) {
-        isBiweekly = biweekly;
-    }
-
-    public boolean isMonthly() {
-        return isMonthly;
-    }
-
-    public void setMonthly(boolean monthly) {
-        isMonthly = monthly;
-    }
-
-    public boolean isYearly() {
-        return isYearly;
-    }
-
-    public void setYearly(boolean yearly) {
-        isYearly = yearly;
-    }
-
     public String getLocationName() {
         return locationName;
     }
 
     public void setLocationName(String locationName) {
-        this.locationName = locationName;
+        this.locationName = locationName.substring(0, Math.min(locationName.length(), 100));
     }
 
-    public float getLocationLatitude() {
+    public double getLocationLatitude() {
         return locationLatitude;
     }
 
-    public void setLocationLatitude(float locationLatitude) {
+    public void setLocationLatitude(double locationLatitude) {
         this.locationLatitude = locationLatitude;
     }
 
-    public float getLocationLongitude() {
+    public double getLocationLongitude() {
         return locationLongitude;
     }
 
-    public void setLocationLongitude(float locationLongitude) {
+    public void setLocationLongitude(double locationLongitude) {
         this.locationLongitude = locationLongitude;
     }
 
@@ -267,7 +249,10 @@ public class Event {
     }
 
     public void setAgeLimit(int ageLimit) {
-        this.ageLimit = ageLimit;
+        if (ageLimit < 100)
+            this.ageLimit = ageLimit;
+        else
+            this.ageLimit = 99;
     }
 
     public String getReservationNumber() {
@@ -283,7 +268,7 @@ public class Event {
     }
 
     public void setTicketUrl(String ticketUrl) {
-        this.ticketUrl = ticketUrl;
+        this.ticketUrl = ticketUrl.substring(0, Math.min(ticketUrl.length(), 50));
     }
 
     public String getIsApproved() {
