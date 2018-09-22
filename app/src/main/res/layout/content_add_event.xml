@@ -21,7 +21,7 @@
             <com.google.android.gms.maps.MapView
                 android:id="@+id/map_event_location"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="match_parent"
                 app:liteMode="true"></com.google.android.gms.maps.MapView>
 
             <Button
@@ -33,111 +33,118 @@
                 android:layout_marginBottom="10dp"
                 android:text="select location"
                 android:textAllCaps="true"
-                android:textColor="@color/icons"/>
+                android:textColor="@color/icons" />
 
         </RelativeLayout>
 
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/edit_event_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:hint="Title"
+            app:met_iconLeft="@drawable/baseline_title_black_36dp" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/edit_event_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:hint="Place"
+            app:met_iconLeft="@drawable/baseline_place_black_36dp" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/edit_event_reservation_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:hint="Phone"
+            android:inputType="phone"
+            android:lines="1"
+            app:met_iconLeft="@drawable/baseline_phone_black_36dp"
+            app:met_maxCharacters="20" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/edit_event_short_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:hint="Event Short Description"
+            app:met_iconLeft="@drawable/baseline_short_text_black_36dp" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/edit_event_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:hint="Event Full Description"
+            android:inputType="textMultiLine"
+            android:maxLength="4000"
+            app:met_iconLeft="@drawable/baseline_notes_black_36dp"
+            app:met_maxCharacters="4000" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/edit_event_website"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:hint="Website"
+            app:met_iconLeft="@drawable/baseline_web_black_36dp" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/edit_event_age_limit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:hint="Minimum Age (Optional)"
+            android:inputType="number"
+            app:met_iconLeft="@drawable/baseline_face_black_36dp"
+            app:met_maxCharacters="2" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/edit_event_ticket_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:hint="Ticketing"
+            android:inputType="textUri"
+            app:met_iconLeft="@drawable/baseline_event_seat_black_36dp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp">
 
             <TextView
-                android:id="@+id/text_event_title"
+                android:id="@+id/text_event_is_private"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="title"
+                android:text="private"
                 android:textAllCaps="true"
                 android:textColor="@color/secondary_text" />
 
-            <EditText
-                android:id="@+id/edit_event_title"
+            <Switch
+                android:id="@+id/switch_event_is_private"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:hint="Classy Art Exhibition"
-                android:singleLine="true"
-                android:inputType="text"
-                android:layout_marginLeft="16dp"
-                android:maxLength="100"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp">
-
-            <TextView
-                android:id="@+id/text_event_location"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="place"
-                android:textAllCaps="true"
-                android:textColor="@color/secondary_text" />
-
-            <EditText
-                android:id="@+id/edit_event_location"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:hint="Light Room Venue - Down Town"
-                android:singleLine="true"
-                android:inputType="text"
-                android:layout_marginLeft="16dp"
-                android:maxLength="100"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp">
-
-            <TextView
-                android:id="@+id/text_event_short_description"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="brief"
-                android:textAllCaps="true"
-                android:textColor="@color/secondary_text" />
-
-            <EditText
-                android:id="@+id/edit_event_short_description"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:hint="Exhibition about Light vs Shadow"
-                android:singleLine="true"
-                android:inputType="text"
-                android:layout_marginLeft="16dp"
-                android:maxLength="140"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp">
-
-            <TextView
-                android:id="@+id/text_event_description"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="description"
-                android:textAllCaps="true"
-                android:textColor="@color/secondary_text" />
-
-            <EditText
-                android:id="@+id/edit_event_description"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:hint="Exhibition about Light vs Shadow and the amazing effect which it produce on the canvas."
-                android:inputType="textMultiLine"
-                android:layout_marginLeft="16dp"
-                android:maxLength="4000"/>
+                android:layout_gravity="right"
+                android:layout_marginStart="16dp"
+                android:layout_weight="3" />
         </LinearLayout>
 
         <LinearLayout
@@ -158,35 +165,9 @@
                 android:id="@+id/spinner_event_type"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:entries="@array/spinner_event_type_populate"
-                android:layout_marginLeft="16dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp">
-
-            <TextView
-                android:id="@+id/text_event_website"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="website"
-                android:textAllCaps="true"
-                android:textColor="@color/secondary_text" />
-
-            <EditText
-                android:id="@+id/edit_event_website"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:hint="www.example.com (Optional)"
-                android:singleLine="true"
-                android:inputType="textUri"
                 android:layout_marginLeft="16dp"
-                android:maxLength="50"/>
+                android:layout_weight="3"
+                android:entries="@array/spinner_event_type_populate" />
         </LinearLayout>
 
         <LinearLayout
@@ -207,9 +188,9 @@
                 android:id="@+id/switch_event_is_recurrent"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
+                android:layout_gravity="right"
                 android:layout_marginStart="16dp"
-                android:layout_gravity="right"/>
+                android:layout_weight="3" />
         </LinearLayout>
 
         <LinearLayout
@@ -230,22 +211,22 @@
                 android:id="@+id/text_event_start_date_picker"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
                 android:layout_weight="3"
-                android:hint="22-03-2017 23:59"
-                android:textColor="?attr/editTextColor"
                 android:background="?attr/editTextBackground"
-                android:gravity="center_vertical"
-                android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
                 android:clickable="true"
                 android:focusable="true"
-                android:layout_marginLeft="16dp"/>
+                android:gravity="center_vertical"
+                android:hint="22-03-2017 23:59"
+                android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
+                android:textColor="?attr/editTextColor" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linear_layout_end_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:id="@+id/linear_layout_end_date">
+            android:layout_margin="16dp">
 
             <TextView
                 android:id="@+id/text_event_end_date"
@@ -260,31 +241,31 @@
                 android:id="@+id/text_event_end_date_picker"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
                 android:layout_weight="3"
-                android:hint="22-03-2017 23:59"
-                android:textColor="?attr/editTextColor"
                 android:background="?attr/editTextBackground"
-                android:gravity="center_vertical"
-                android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
                 android:clickable="true"
-                android:focusable="true"
                 android:enabled="false"
-                android:layout_marginLeft="16dp"/>
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:hint="22-03-2017 23:59"
+                android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
+                android:textColor="?attr/editTextColor" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linear_layout_recurrent_every"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:id="@+id/linear_layout_recurrent_every">
+            android:layout_margin="16dp">
 
             <TextView
                 android:id="@+id/text_event_recurrent_every"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_weight="1"
                 android:text="every"
-                android:layout_gravity="center"
                 android:textAllCaps="true"
                 android:textColor="@color/secondary_text" />
 
@@ -292,24 +273,24 @@
                 android:id="@+id/single_select_group_recurrence_choices"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:tbgCheckedButton="@+id/toggle_button_every_day"
+                android:layout_marginLeft="16dp"
                 android:layout_weight="3"
-                android:layout_marginLeft="16dp">
+                app:tbgCheckedButton="@+id/toggle_button_every_day">
 
                 <com.nex3z.togglebuttongroup.button.CircularToggle
                     android:id="@+id/toggle_button_every_day"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:tbgMarkerColor="@color/colorAccent"
-                    android:text="Day"/>
+                    android:text="Day"
+                    app:tbgMarkerColor="@color/colorAccent" />
 
                 <com.nex3z.togglebuttongroup.button.CircularToggle
                     android:id="@+id/toggle_button_every_week"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:tbgMarkerColor="@color/colorAccent"
+                    android:layout_marginLeft="24dp"
                     android:text="Week"
-                    android:layout_marginLeft="24dp"/>
+                    app:tbgMarkerColor="@color/colorAccent" />
 
             </com.nex3z.togglebuttongroup.SingleSelectToggleGroup>
         </LinearLayout>
@@ -318,65 +299,65 @@
             android:id="@+id/multiselect_group_weekdays"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tbgChildSpacing="auto"
-            android:layout_margin="16dp">
+            android:layout_margin="16dp"
+            app:tbgChildSpacing="auto">
 
             <com.nex3z.togglebuttongroup.button.CircularToggle
                 android:id="@+id/toggle_button_monday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:tbgMarkerColor="@color/colorAccent"
-                android:text="M" />
+                android:text="M"
+                app:tbgMarkerColor="@color/colorAccent" />
 
             <com.nex3z.togglebuttongroup.button.CircularToggle
                 android:id="@+id/toggle_button_tuesday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:tbgMarkerColor="@color/colorAccent"
-                android:text="T"/>
+                android:text="T"
+                app:tbgMarkerColor="@color/colorAccent" />
 
             <com.nex3z.togglebuttongroup.button.CircularToggle
                 android:id="@+id/toggle_button_wednesday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:tbgMarkerColor="@color/colorAccent"
-                android:text="W"/>
+                android:text="W"
+                app:tbgMarkerColor="@color/colorAccent" />
 
             <com.nex3z.togglebuttongroup.button.CircularToggle
                 android:id="@+id/toggle_button_thurday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:tbgMarkerColor="@color/colorAccent"
-                android:text="Th"/>
+                android:text="Th"
+                app:tbgMarkerColor="@color/colorAccent" />
 
             <com.nex3z.togglebuttongroup.button.CircularToggle
                 android:id="@+id/toggle_button_friday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:tbgMarkerColor="@color/colorAccent"
-                android:text="F"/>
+                android:text="F"
+                app:tbgMarkerColor="@color/colorAccent" />
 
             <com.nex3z.togglebuttongroup.button.CircularToggle
                 android:id="@+id/toggle_button_saturday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:tbgMarkerColor="@color/colorAccent"
-                android:text="S"/>
+                android:text="S"
+                app:tbgMarkerColor="@color/colorAccent" />
 
             <com.nex3z.togglebuttongroup.button.CircularToggle
                 android:id="@+id/toggle_button_sunday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:tbgMarkerColor="@color/colorAccent"
-                android:text="Su"/>
+                android:text="Su"
+                app:tbgMarkerColor="@color/colorAccent" />
 
         </com.nex3z.togglebuttongroup.MultiSelectToggleGroup>
 
         <LinearLayout
+            android:id="@+id/linear_layout_until_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:id="@+id/linear_layout_until_date">
+            android:layout_margin="16dp">
 
             <TextView
                 android:id="@+id/text_event_until_date"
@@ -391,117 +372,16 @@
                 android:id="@+id/text_event_until_date_picker"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
                 android:layout_weight="3"
-                android:hint="22-03-2017 23:59"
-                android:textColor="?attr/editTextColor"
                 android:background="?attr/editTextBackground"
-                android:gravity="center_vertical"
-                android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
                 android:clickable="true"
-                android:focusable="true"
                 android:enabled="false"
-                android:layout_marginLeft="16dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp">
-
-            <TextView
-                android:id="@+id/text_event_age_limit"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="min age"
-                android:textAllCaps="true"
-                android:textColor="@color/secondary_text" />
-
-            <EditText
-                android:id="@+id/edit_event_age_limit"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:hint="18 (Optional)"
-                android:singleLine="true"
-                android:inputType="number"
-                android:layout_marginLeft="16dp"
-                android:maxLength="2"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp">
-
-            <TextView
-                android:id="@+id/text_event_reservation_number"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Phone"
-                android:textAllCaps="true"
-                android:textColor="@color/secondary_text" />
-
-            <EditText
-                android:id="@+id/edit_event_reservation_number"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:hint="+961 76 123456"
-                android:singleLine="true"
-                android:inputType="phone"
-                android:layout_marginLeft="16dp"
-                android:maxLength="20"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp">
-
-            <TextView
-                android:id="@+id/text_event_ticket_url"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Ticketing"
-                android:textAllCaps="true"
-                android:textColor="@color/secondary_text" />
-
-            <EditText
-                android:id="@+id/edit_event_ticket_url"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:hint="www.ticketreservation.com (Optional)"
-                android:singleLine="true"
-                android:inputType="textUri"
-                android:layout_marginLeft="16dp"
-                android:maxLength="50"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp">
-
-            <TextView
-                android:id="@+id/text_event_is_private"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="private"
-                android:textAllCaps="true"
-                android:textColor="@color/secondary_text" />
-
-            <Switch
-                android:id="@+id/switch_event_is_private"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:layout_marginStart="16dp"
-                android:layout_gravity="right"/>
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:hint="22-03-2017 23:59"
+                android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
+                android:textColor="?attr/editTextColor" />
         </LinearLayout>
 
         <RelativeLayout
@@ -523,9 +403,52 @@
                 android:layout_marginBottom="10dp"
                 android:text="select photo"
                 android:textAllCaps="true"
-                android:textColor="@color/icons"/>
+                android:textColor="@color/icons" />
 
         </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_margin="8dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/image_view_event_image_0"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/dotted"
+                android:src="@drawable/ic_menu_camera" />
+
+            <ImageView
+                android:id="@+id/image_view_event_image_1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/dotted"
+                android:src="@drawable/ic_menu_camera" />
+
+            <ImageView
+                android:id="@+id/image_view_event_image_2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/dotted"
+                android:src="@drawable/ic_menu_camera" />
+
+            <ImageView
+                android:id="@+id/image_view_event_image_3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/dotted"
+                android:src="@drawable/ic_menu_camera" />
+        </LinearLayout>
 
     </LinearLayout>
 

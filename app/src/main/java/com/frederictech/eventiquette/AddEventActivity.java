@@ -5,7 +5,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -28,8 +30,11 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
+import com.fxn.pix.Pix;
+import com.fxn.utility.PermUtil;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -48,16 +53,22 @@ import com.nex3z.togglebuttongroup.button.OnCheckedChangeListener;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
+import java.time.Month;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class AddEventActivity extends AppCompatActivity
         implements OnMapReadyCallback {
 
     int PLACE_PICKER_REQUEST = 200;
     int READ_REQUEST_CODE = 300;
+    int PIX_REQUEST_CODE = 400;
+    int NUMBER_OF_PIX_TO_SELECT = 4;
 
     Context context;
 
@@ -103,6 +114,11 @@ public class AddEventActivity extends AppCompatActivity
 
     com.nex3z.togglebuttongroup.button.CircularToggle toggleButtonDay;
     com.nex3z.togglebuttongroup.button.CircularToggle toggleButtonWeek;
+
+    ImageView imgViewImage0;
+    ImageView imgViewImage1;
+    ImageView imgViewImage2;
+    ImageView imgViewImage3;
 
 
     Date eventStartDate;
@@ -159,6 +175,11 @@ public class AddEventActivity extends AppCompatActivity
         editTextAgeLimit = (EditText) findViewById(R.id.edit_event_age_limit);
         editTextTicketingUrl = (EditText) findViewById(R.id.edit_event_ticket_url);
         switchIsPrivate = (Switch) findViewById(R.id.switch_event_is_private);
+
+        imgViewImage0 = (ImageView) findViewById(R.id.image_view_event_image_0);
+        imgViewImage1 = (ImageView) findViewById(R.id.image_view_event_image_1);
+        imgViewImage2 = (ImageView) findViewById(R.id.image_view_event_image_2);
+        imgViewImage3 = (ImageView) findViewById(R.id.image_view_event_image_3);
 
 
         nDialog = new ProgressDialog(AddEventActivity.this);
@@ -264,6 +285,19 @@ public class AddEventActivity extends AppCompatActivity
                 showUntilDateTimePicker();
             }
         });
+
+        View.OnClickListener eventImageListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                nDialog.show();
+                Pix.start(AddEventActivity.this, PIX_REQUEST_CODE, NUMBER_OF_PIX_TO_SELECT);
+            }
+        };
+
+        imgViewImage0.setOnClickListener(eventImageListener);
+        imgViewImage1.setOnClickListener(eventImageListener);
+        imgViewImage2.setOnClickListener(eventImageListener);
+        imgViewImage3.setOnClickListener(eventImageListener);
     }
 
     private void ShowRecurrentEventSection() {
@@ -714,6 +748,36 @@ public class AddEventActivity extends AppCompatActivity
                 btnSelectPhoto.setEnabled(true);
             }
         }
+
+        if (requestCode == PIX_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+
+                ArrayList<String> returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
+                if(returnValue != null){
+                    if(returnValue.size() >= 1)
+                    if(returnValue.get(0) != null){
+                        Picasso.get().load("file://" + returnValue.get(0)).into(imgViewImage0);
+                    }
+                    if(returnValue.size() >= 2)
+                    if(returnValue.get(1) != null){
+                        Picasso.get().load("file://" + returnValue.get(1)).into(imgViewImage1);
+                    }
+                    if(returnValue.size() >= 3)
+                    if(returnValue.get(2) != null){
+                        Picasso.get().load("file://" + returnValue.get(2)).into(imgViewImage2);
+                    }
+                    if(returnValue.size() >= 4)
+                    if(returnValue.get(3) != null){
+                        Picasso.get().load("file://" + returnValue.get(3)).into(imgViewImage3);
+                    }
+                }
+                nDialog.cancel();
+            }
+            if (resultCode == RESULT_CANCELED) {
+                nDialog.cancel();
+                btnSelectPhoto.setEnabled(true);
+            }
+        }
     }
 
     public void showSnackBar(Activity activity, String message){
@@ -744,6 +808,21 @@ public class AddEventActivity extends AppCompatActivity
     public void onLowMemory() {
         super.onLowMemory();
         eventLocationMap.onLowMemory();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PermUtil.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Pix.start(AddEventActivity.this, PIX_REQUEST_CODE, NUMBER_OF_PIX_TO_SELECT);
+                } else {
+                    Toast.makeText(AddEventActivity.this, "Approve permissions to open Pix ImagePicker", Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+        }
     }
 
 }
