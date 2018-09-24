@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -21,18 +22,22 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Checkable;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.firebase.ui.auth.data.model.Resource;
 import com.fxn.pix.Pix;
 import com.fxn.utility.PermUtil;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -51,6 +56,7 @@ import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment;
 import com.nex3z.togglebuttongroup.MultiSelectToggleGroup;
 import com.nex3z.togglebuttongroup.button.OnCheckedChangeListener;
 import com.squareup.picasso.Picasso;
+import com.yarolegovich.lovelydialog.LovelyChoiceDialog;
 
 import java.text.SimpleDateFormat;
 import java.time.Month;
@@ -97,10 +103,10 @@ public class AddEventActivity extends AppCompatActivity
     EditText editTextTicketingUrl;
     Switch switchIsPrivate;
 
-    Button btnSelectLocation;
     EditText editTextEventLocationName;
-    TextView textViewStartDatePicker;
-    TextView textViewEndDatePicker;
+    com.rengwuxian.materialedittext.MaterialEditText textViewStartDatePicker;
+    com.rengwuxian.materialedittext.MaterialEditText textViewEndDatePicker;
+    com.rengwuxian.materialedittext.MaterialEditText textViewReccuranceType;
     TextView textViewUntilDatePicker;
     Button btnSelectPhoto;
     ImageView imageViewEventPhoto;
@@ -109,11 +115,7 @@ public class AddEventActivity extends AppCompatActivity
 
     LinearLayout linearLayoutEndDate;
     LinearLayout linearLayoutUntilDate;
-    LinearLayout linearLayoutRecurrentEvery;
     MultiSelectToggleGroup muliselectGroupWeekdays;
-
-    com.nex3z.togglebuttongroup.button.CircularToggle toggleButtonDay;
-    com.nex3z.togglebuttongroup.button.CircularToggle toggleButtonWeek;
 
     ImageView imgViewImage0;
     ImageView imgViewImage1;
@@ -137,24 +139,21 @@ public class AddEventActivity extends AppCompatActivity
 
         linearLayoutEndDate = (LinearLayout) findViewById(R.id.linear_layout_end_date);
         linearLayoutUntilDate = (LinearLayout) findViewById(R.id.linear_layout_until_date);
-        linearLayoutRecurrentEvery = (LinearLayout) findViewById(R.id.linear_layout_recurrent_every);
         muliselectGroupWeekdays = (MultiSelectToggleGroup) findViewById(R.id.multiselect_group_weekdays);
-        toggleButtonDay = (com.nex3z.togglebuttongroup.button.CircularToggle) findViewById(R.id.toggle_button_every_day);
-        toggleButtonWeek = (com.nex3z.togglebuttongroup.button.CircularToggle) findViewById(R.id.toggle_button_every_week);
-        HideRecurrentEventSection();
+
 
         // Gets the MapView from the XML layout and creates it
         eventLocationMap = (MapView) findViewById(R.id.map_event_location);
         eventLocationMap.onCreate(savedInstanceState);
-        eventLocationMap.setClickable(false);
+        eventLocationMap.setClickable(true);
         eventLocationMap.getMapAsync(this);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        btnSelectLocation = (Button) findViewById(R.id.map_select_location);
         editTextEventLocationName = (EditText) findViewById(R.id.edit_event_location);
-        textViewStartDatePicker = (TextView) findViewById(R.id.text_event_start_date_picker);
-        textViewEndDatePicker = (TextView) findViewById(R.id.text_event_end_date_picker);
+        textViewStartDatePicker = (com.rengwuxian.materialedittext.MaterialEditText) findViewById(R.id.text_event_start_date_picker);
+        textViewEndDatePicker = (com.rengwuxian.materialedittext.MaterialEditText) findViewById(R.id.text_event_end_date_picker);
+        textViewReccuranceType = (com.rengwuxian.materialedittext.MaterialEditText) findViewById(R.id.text_event_recurrence_type);
         textViewUntilDatePicker = (TextView) findViewById(R.id.text_event_until_date_picker);
         btnSelectPhoto = (Button) findViewById(R.id.image_view_event_image_select);
         imageViewEventPhoto = (ImageView) findViewById(R.id.image_view_event_image);
@@ -181,13 +180,12 @@ public class AddEventActivity extends AppCompatActivity
         imgViewImage2 = (ImageView) findViewById(R.id.image_view_event_image_2);
         imgViewImage3 = (ImageView) findViewById(R.id.image_view_event_image_3);
 
+        HideRecurrentEventSection();
 
         nDialog = new ProgressDialog(AddEventActivity.this);
         nDialog.setMessage("Loading...");
         nDialog.setIndeterminate(true);
         nDialog.setCancelable(false);
-
-        initialBtnSelectLocationBackgroundDrawable = btnSelectLocation.getBackground();
 
         editTextEventReservationNumber.addTextChangedListener(new PhoneNumberFormattingTextWatcher("LB"));
 
@@ -195,57 +193,10 @@ public class AddEventActivity extends AppCompatActivity
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(b){
-                    toggleButtonDay.setChecked(true);
                     ShowRecurrentEventSection();
                 }
                 else{
                     HideRecurrentEventSection();
-                }
-            }
-        });
-
-        toggleButtonDay.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-            @Override
-            public <T extends View & Checkable> void onCheckedChanged(T view, boolean isChecked) {
-                if(isChecked){
-                    toggleButtonWeek.setChecked(false);
-                    muliselectGroupWeekdays.setVisibility(View.GONE);
-                } else {
-                    toggleButtonWeek.setChecked(true);
-                    muliselectGroupWeekdays.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
-        toggleButtonWeek.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-            @Override
-            public <T extends View & Checkable> void onCheckedChanged(T view, boolean isChecked) {
-                if(isChecked){
-                    toggleButtonDay.setChecked(false);
-                    muliselectGroupWeekdays.setVisibility(View.VISIBLE);
-                } else {
-                    toggleButtonDay.setChecked(true);
-                    muliselectGroupWeekdays.setVisibility(View.GONE);
-                }
-            }
-        });
-
-        btnSelectLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-                try {
-                    btnSelectLocation.setEnabled(false);
-                    nDialog.show();
-                    startActivityForResult(builder.build(AddEventActivity.this), PLACE_PICKER_REQUEST);
-                } catch (GooglePlayServicesRepairableException e) {
-                    btnSelectLocation.setEnabled(true);
-                    nDialog.cancel();
-                    e.printStackTrace();
-                } catch (GooglePlayServicesNotAvailableException e) {
-                    btnSelectLocation.setEnabled(true);
-                    nDialog.cancel();
-                    e.printStackTrace();
                 }
             }
         });
@@ -298,17 +249,42 @@ public class AddEventActivity extends AppCompatActivity
         imgViewImage1.setOnClickListener(eventImageListener);
         imgViewImage2.setOnClickListener(eventImageListener);
         imgViewImage3.setOnClickListener(eventImageListener);
+
+        textViewReccuranceType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ArrayAdapter<RecurrenceTypeOptions> adapter = new RecurrenceTypeAdapter(context, loadDonationOptions());
+                new LovelyChoiceDialog(context)
+                        .setTopColorRes(R.color.colorAccent)
+                        .setIcon(R.drawable.baseline_autorenew_black_36dp)
+                        .setItems(adapter, new LovelyChoiceDialog.OnItemSelectedListener<RecurrenceTypeOptions>() {
+                            @Override
+                            public void onItemSelected(int position, RecurrenceTypeOptions item) {
+                                Toast.makeText(context, item.amount,Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .show();
+            }
+        });
+    }
+
+    private List<RecurrenceTypeOptions> loadDonationOptions() {
+        List<RecurrenceTypeOptions> result = new ArrayList<>();
+        String[] raw = getResources().getStringArray(R.array.donations);
+        for (String op : raw) {
+            String[] info = op.split("%");
+            result.add(new RecurrenceTypeOptions(info[1], info[0]));
+        }
+        return result;
     }
 
     private void ShowRecurrentEventSection() {
-        linearLayoutEndDate.setVisibility(View.GONE);
-        linearLayoutRecurrentEvery.setVisibility(View.VISIBLE);
+        textViewEndDatePicker.setVisibility(View.GONE);
         linearLayoutUntilDate.setVisibility(View.VISIBLE);
     }
 
     private void HideRecurrentEventSection() {
-        linearLayoutEndDate.setVisibility(View.VISIBLE);
-        linearLayoutRecurrentEvery.setVisibility(View.GONE);
+        textViewEndDatePicker.setVisibility(View.VISIBLE);
         muliselectGroupWeekdays.setVisibility(View.GONE);
         linearLayoutUntilDate.setVisibility(View.GONE);
     }
@@ -540,10 +516,8 @@ public class AddEventActivity extends AppCompatActivity
         if (userSelectedPlaceLatLng != null){
             userEvent.setLocationLatitude(userSelectedPlaceLatLng.latitude);
             userEvent.setLocationLongitude(userSelectedPlaceLatLng.longitude);
-            btnSelectLocation.setBackground(initialBtnSelectLocationBackgroundDrawable);
         } else {
             isValid = false;
-            btnSelectLocation.setBackgroundColor(Color.RED);
         }
 
         if (editTextEventTitle != null && !editTextEventTitle.getText().toString().trim().equals("") ) {
@@ -618,23 +592,6 @@ public class AddEventActivity extends AppCompatActivity
             isValid = false;
         }
 
-        if (toggleButtonDay != null && toggleButtonDay.isChecked()){
-            userEvent.setDaily(true);
-            userEvent.setWeekly(false);
-        } else if (toggleButtonWeek != null && toggleButtonWeek.isChecked()){
-            userEvent.setWeekly(true);
-            userEvent.setDaily(false);
-        }
-
-        if (toggleButtonWeek.isChecked() && !toggleIsMonday.isChecked() && !toggleIsTuesday.isChecked()
-                && !toggleIsWednesday.isChecked() && !toggleIsThursday.isChecked() && !toggleIsFriday.isChecked()
-                && !toggleIsSaturday.isChecked() && !toggleIsSunday.isChecked()){
-            findViewById(R.id.multiselect_group_weekdays).setBackgroundColor(Color.parseColor("#F44336"));
-            isValid = false;
-        } else {
-            findViewById(R.id.multiselect_group_weekdays).setBackgroundColor(Color.TRANSPARENT);
-        }
-
         userEvent.setOnMonday(toggleIsMonday.isChecked());
         userEvent.setOnTuesday(toggleIsTuesday.isChecked());
         userEvent.setOnWednesday(toggleIsWednesday.isChecked());
@@ -705,6 +662,25 @@ public class AddEventActivity extends AppCompatActivity
         map.getUiSettings().setMapToolbarEnabled(false);
         map.moveCamera(CameraUpdateFactory.newLatLng(mNDUFacultyOfScienceLatLng));
         map.moveCamera(CameraUpdateFactory.zoomTo(17.0f));
+        map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+                try {
+                    eventLocationMap.setClickable(false);
+                    nDialog.show();
+                    startActivityForResult(builder.build(AddEventActivity.this), PLACE_PICKER_REQUEST);
+                } catch (GooglePlayServicesRepairableException e) {
+                    eventLocationMap.setClickable(true);
+                    nDialog.cancel();
+                    e.printStackTrace();
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    eventLocationMap.setClickable(true);
+                    nDialog.cancel();
+                    e.printStackTrace();
+                }
+            }
+        });
         mNDUFacultyOfScienceMarker = map.addMarker(new MarkerOptions().position(mNDUFacultyOfScienceLatLng));
     }
 
@@ -719,11 +695,11 @@ public class AddEventActivity extends AppCompatActivity
                 mUserLocationMarker = map.addMarker(new MarkerOptions().position(place.getLatLng()));
                 map.moveCamera(CameraUpdateFactory.newLatLng(place.getLatLng()));
                 editTextEventLocationName.setText(place.getName());
-                btnSelectLocation.setEnabled(true);
+                eventLocationMap.setClickable(true);
                 nDialog.cancel();
             }
             if (resultCode == RESULT_CANCELED){
-                btnSelectLocation.setEnabled(true);
+                eventLocationMap.setClickable(true);
                 nDialog.cancel();
             }
         }
