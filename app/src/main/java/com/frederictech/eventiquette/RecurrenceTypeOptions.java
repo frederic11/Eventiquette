@@ -1,19 +1,9 @@
 package com.frederictech.eventiquette;
 
 public class RecurrenceTypeOptions {
-    public final String description;
-    public final String amount;
+    public final String recurrenceType;
 
-    public RecurrenceTypeOptions(String amount, String description) {
-        this.amount = amount;
-        this.description = description;
-    }
-
-    @Override
-    public String toString() {
-        return "DonationOption{" +
-                "description='" + description + '\'' +
-                ", amount='" + amount + '\'' +
-                '}';
+    public RecurrenceTypeOptions(String recurrenceType) {
+        this.recurrenceType = recurrenceType;
     }
 }

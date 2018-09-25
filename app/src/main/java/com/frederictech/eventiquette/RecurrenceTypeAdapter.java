@@ -26,19 +26,16 @@ public class RecurrenceTypeAdapter extends ArrayAdapter<RecurrenceTypeOptions> {
 
         RecurrenceTypeOptions option = getItem(position);
 
-        vh.description.setText(option.description);
-        vh.amount.setText(option.amount);
+        vh.recurrenceType.setText(option.recurrenceType);
 
         return convertView;
     }
 
     private static final class ViewHolder {
-        TextView description;
-        TextView amount;
+        TextView recurrenceType;
 
         public ViewHolder(View v) {
-            description = (TextView) v.findViewById(R.id.description123);
-            amount = (TextView) v.findViewById(R.id.amount123);
+            recurrenceType = (TextView) v.findViewById(R.id.item_recurrence_type);
         }
     }
 }

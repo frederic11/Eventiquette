@@ -1,9 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string-array name="donations">
-        <item>Greedy option%1$</item>
-        <item>Rich option%100$</item>
+    <string-array name="recurrence_type_populate">
+        <item>Once</item>
+        <item>Weekly</item>
+    </string-array>
+
+    <string-array name="spinner_event_type_populate">
+        <item>Sports and Outdoor</item>
+        <item>Academic</item>
+        <item>Party</item>
+        <item>Exhibition</item>
+        <item>Concert</item>
+    </string-array>
+
+    <string-array name="event_privacy_populate">
+        <item>Public</item>
+        <item>Private</item>
     </string-array>
 
 </resources>
