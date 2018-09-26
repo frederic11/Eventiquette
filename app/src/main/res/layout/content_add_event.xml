@@ -30,6 +30,10 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:hint="Title"
+            android:lines="1"
+            android:maxLength="140"
+            app:met_maxCharacters="140"
+            app:met_singleLineEllipsis="true"
             app:met_iconLeft="@drawable/baseline_title_black_36dp" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
@@ -40,6 +44,10 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:hint="Place"
+            android:lines="1"
+            android:maxLength="140"
+            app:met_maxCharacters="140"
+            app:met_singleLineEllipsis="true"
             app:met_iconLeft="@drawable/baseline_place_black_36dp" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
@@ -52,6 +60,8 @@
             android:hint="Phone"
             android:inputType="phone"
             android:lines="1"
+            android:maxLength="20"
+            app:met_singleLineEllipsis="true"
             app:met_iconLeft="@drawable/baseline_phone_black_36dp"
             app:met_maxCharacters="20" />
 
@@ -77,6 +87,8 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:hint="Event Short Description"
+            android:lines="2"
+            android:maxLength="250"
             app:met_iconLeft="@drawable/baseline_short_text_black_36dp" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
@@ -93,34 +105,6 @@
             app:met_maxCharacters="4000" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/text_event_start_date_picker"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:clickable="true"
-            android:enabled="true"
-            android:focusable="false"
-            android:hint="Start Date and Time"
-            android:inputType="datetime"
-            app:met_iconLeft="@drawable/baseline_event_available_black_36dp" />
-
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/text_event_end_date_picker"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:clickable="true"
-            android:enabled="false"
-            android:focusable="false"
-            android:hint="Start Date and Time"
-            android:inputType="datetime"
-            app:met_iconLeft="@drawable/baseline_event_busy_black_36dp" />
-
-        <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/text_event_recurrence_type"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -135,7 +119,7 @@
             app:met_iconLeft="@drawable/baseline_autorenew_black_36dp" />
 
         <com.nex3z.togglebuttongroup.MultiSelectToggleGroup
-            android:id="@+id/multiselect_group_weekdays"
+            android:id="@+id/multi_select_group_weekdays"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
@@ -193,6 +177,34 @@
         </com.nex3z.togglebuttongroup.MultiSelectToggleGroup>
 
         <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/text_event_start_date_picker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:clickable="true"
+            android:enabled="true"
+            android:focusable="false"
+            android:hint="Start Date and Time"
+            android:inputType="datetime"
+            app:met_iconLeft="@drawable/baseline_event_available_black_36dp" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/text_event_end_date_picker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:clickable="true"
+            android:enabled="false"
+            android:focusable="false"
+            android:hint="End Date and Time"
+            android:inputType="datetime"
+            app:met_iconLeft="@drawable/baseline_event_busy_black_36dp" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/edit_event_website"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -200,6 +212,10 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:hint="Website"
+            android:inputType="textUri"
+            android:maxLength="140"
+            app:met_maxCharacters="140"
+            app:met_singleLineEllipsis="true"
             app:met_iconLeft="@drawable/baseline_web_black_36dp" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
@@ -211,6 +227,7 @@
             android:layout_marginRight="16dp"
             android:hint="Minimum Age (Optional)"
             android:inputType="number"
+            android:maxLength="2"
             app:met_iconLeft="@drawable/baseline_face_black_36dp"
             app:met_maxCharacters="2" />
 
@@ -221,8 +238,11 @@
             android:layout_marginBottom="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:hint="Ticketing"
+            android:hint="Tickets Link"
             android:inputType="textUri"
+            android:maxLength="140"
+            app:met_singleLineEllipsis="true"
+            app:met_maxCharacters="140"
             app:met_iconLeft="@drawable/baseline_event_seat_black_36dp" />
 
         <com.rengwuxian.materialedittext.MaterialEditText

@@ -14,21 +14,13 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneNumberFormattingTextWatcher;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
-import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -49,6 +41,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment;
 import com.nex3z.togglebuttongroup.MultiSelectToggleGroup;
 import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 import com.yarolegovich.lovelydialog.LovelyChoiceDialog;
 
 import java.text.SimpleDateFormat;
@@ -146,7 +140,7 @@ public class AddEventActivity extends AppCompatActivity
         toggleIsSunday = (com.nex3z.togglebuttongroup.button.CircularToggle) findViewById(R.id.toggle_button_sunday);
         editTextAgeLimit = (EditText) findViewById(R.id.edit_event_age_limit);
         editTextTicketingUrl = (EditText) findViewById(R.id.edit_event_ticket_url);
-        muliselectGroupWeekdays = (MultiSelectToggleGroup) findViewById(R.id.multiselect_group_weekdays);
+        muliselectGroupWeekdays = (MultiSelectToggleGroup) findViewById(R.id.multi_select_group_weekdays);
 
         HideRecurrentEventSection();
 
@@ -186,18 +180,30 @@ public class AddEventActivity extends AppCompatActivity
         textViewRecurrenceType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                textViewRecurrenceType.setEnabled(false);
                 ArrayAdapter<RecurrenceTypeOptions> adapter = new RecurrenceTypeAdapter(context, loadRecurrenceOptions());
                 new LovelyChoiceDialog(context)
                         .setTopColorRes(R.color.colorAccent)
                         .setIcon(R.drawable.baseline_autorenew_black_36dp)
+                        .setCancelable(false)
                         .setItems(adapter, new LovelyChoiceDialog.OnItemSelectedListener<RecurrenceTypeOptions>() {
                             @Override
                             public void onItemSelected(int position, RecurrenceTypeOptions item) {
                                 textViewRecurrenceType.setText(item.recurrenceType);
                                 if(Objects.equals(item.recurrenceType, "Once")){
                                     HideRecurrentEventSection();
+                                    textViewStartDatePicker.setText("");
+                                    textViewEndDatePicker.setEnabled(false);
+                                    textViewEndDatePicker.setHint("End Date and Time");
+                                    textViewEndDatePicker.setText("");
+                                    textViewRecurrenceType.setEnabled(true);
                                 } else if(Objects.equals(item.recurrenceType, "Weekly")){
                                     ShowRecurrentEventSection();
+                                    textViewRecurrenceType.setEnabled(true);
+                                    textViewStartDatePicker.setText("");
+                                    textViewEndDatePicker.setEnabled(false);
+                                    textViewEndDatePicker.setHint("Until");
+                                    textViewEndDatePicker.setText("");
                                 }
                             }
                         })
@@ -208,15 +214,18 @@ public class AddEventActivity extends AppCompatActivity
         textViewEventType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                textViewRecurrenceType.setEnabled(false);
                 ArrayAdapter<RecurrenceTypeOptions> adapter = new RecurrenceTypeAdapter(context, loadEventTypeOptions());
                 new LovelyChoiceDialog(context)
                         .setTopColorRes(R.color.colorAccent)
                         .setIcon(R.drawable.baseline_local_offer_black_36dp)
                         .setTitle("Event Type")
+                        .setCancelable(false)
                         .setItems(adapter, new LovelyChoiceDialog.OnItemSelectedListener<RecurrenceTypeOptions>() {
                             @Override
                             public void onItemSelected(int position, RecurrenceTypeOptions item) {
                                 textViewEventType.setText(item.recurrenceType);
+                                textViewRecurrenceType.setEnabled(true);
                             }
                         })
                         .show();
@@ -226,21 +235,24 @@ public class AddEventActivity extends AppCompatActivity
         textViewEventPrivacy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                textViewEventPrivacy.setEnabled(false);
                 ArrayAdapter<RecurrenceTypeOptions> adapter = new RecurrenceTypeAdapter(context, loadEventPrivacyOptions());
                 new LovelyChoiceDialog(context)
                         .setTopColorRes(R.color.colorAccent)
                         .setIcon(R.drawable.baseline_lock_black_36dp)
+                        .setCancelable(false)
                         .setItems(adapter, new LovelyChoiceDialog.OnItemSelectedListener<RecurrenceTypeOptions>() {
                             @Override
                             public void onItemSelected(int position, RecurrenceTypeOptions item) {
                                 textViewEventPrivacy.setText(item.recurrenceType);
+                                textViewEventPrivacy.setEnabled(true);
                             }
                         })
                         .show();
             }
         });
 
-        Picasso.get().load(R.drawable.upload_image_placeholder).fit().centerCrop().into(imageViewEventPhoto);
+        Picasso.get().load(R.drawable.click_to_add_image).fit().centerCrop().into(imageViewEventPhoto);
     }
 
     private List<RecurrenceTypeOptions> loadRecurrenceOptions() {
@@ -278,22 +290,14 @@ public class AddEventActivity extends AppCompatActivity
         muliselectGroupWeekdays.setVisibility(View.GONE);
     }
 
-    private void PerformFileSearch() {
-        // ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file
-        // browser.
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-
-        // Filter to only show results that can be "opened", such as a
-        // file (as opposed to a list of contacts or timezones)
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-
-        // Filter to show only images, using the image MIME data type.
-        // If one wanted to search for ogg vorbis files, the type would be "audio/ogg".
-        // To search for all documents available via installed storage providers,
-        // it would be "*/*".
-        intent.setType("image/*");
-
-        startActivityForResult(intent, READ_REQUEST_CODE);
+    private void PerformFileSearch(){
+        CropImage.activity()
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .setAspectRatio(16, 9)
+                .setFixAspectRatio(true)
+                .setBackgroundColor(R.color.colorPrimary)
+                .setBorderCornerColor(R.color.colorAccent)
+                .start(this);
     }
 
     private void showStartDateTimePicker() {
@@ -368,68 +372,6 @@ public class AddEventActivity extends AppCompatActivity
         final SimpleDateFormat myDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm", java.util.Locale.getDefault());
         // Assign values
         dateTimeDialogFragment.startAtTimeView();
-        dateTimeDialogFragment.set24HoursMode(false);
-        dateTimeDialogFragment.setMinimumDateTime(cal2.getTime());//eventStartDate + 15 minutes
-        dateTimeDialogFragment.setMaximumDateTime(new GregorianCalendar(2050, Calendar.DECEMBER, 31).getTime());
-        dateTimeDialogFragment.setDefaultDateTime(cal.getTime()); //eventStartDate + One hour
-
-        // Define new day and month format
-        try {
-            dateTimeDialogFragment.setSimpleDateMonthAndDayFormat(new SimpleDateFormat("MM yyyy", Locale.getDefault()));
-        } catch (SwitchDateTimeDialogFragment.SimpleDateMonthAndDayFormatException e) {
-            Log.e("dateTimeDialogFragment", e.getMessage());
-        }
-
-        // Set listener
-        dateTimeDialogFragment.setOnButtonClickListener(new SwitchDateTimeDialogFragment.OnButtonClickListener() {
-            @Override
-            public void onPositiveButtonClick(Date date) {
-                // Date is get on positive button click
-                if (date.before(eventStartDate)) {
-                    eventEndDate = null;
-                    showSnackBar(AddEventActivity.this,"Event End Date can't be before it's Start Date.");
-                } else {
-                    eventEndDate = date;
-                    textViewEndDatePicker.setText(myDateFormat.format(date));
-                }
-                textViewEndDatePicker.setEnabled(true);
-                nDialog.cancel();
-            }
-
-            @Override
-            public void onNegativeButtonClick(Date date) {
-                // Date is get on negative button click
-                textViewEndDatePicker.setEnabled(true);
-                nDialog.cancel();
-            }
-        });
-
-
-        dateTimeDialogFragment.show(getSupportFragmentManager(), "dialog_time");
-    }
-
-    private void showUntilDateTimePicker() {// Initialize DateTimePicker Start
-        SwitchDateTimeDialogFragment dateTimeDialogFragment = SwitchDateTimeDialogFragment.newInstance(
-                "Event Until Date",
-                "OK",
-                "Cancel"
-        );
-
-        if (eventStartDate == null) {
-            eventStartDate = new Date();
-        }
-
-        Calendar cal = Calendar.getInstance(); // creates calendar
-        cal.setTime(eventStartDate); // sets calendar time/date
-        cal.add(Calendar.DAY_OF_MONTH, 3); // adds 3 days
-
-        Calendar cal2 = Calendar.getInstance(); // creates calendar
-        cal2.setTime(eventStartDate); // sets calendar time/date
-        cal2.add(Calendar.DAY_OF_MONTH, 1); // adds 1 days
-
-        final SimpleDateFormat myDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm", java.util.Locale.getDefault());
-        // Assign values
-        dateTimeDialogFragment.startAtCalendarView();
         dateTimeDialogFragment.set24HoursMode(false);
         dateTimeDialogFragment.setMinimumDateTime(cal2.getTime());//eventStartDate + 15 minutes
         dateTimeDialogFragment.setMaximumDateTime(new GregorianCalendar(2050, Calendar.DECEMBER, 31).getTime());
@@ -674,6 +616,22 @@ public class AddEventActivity extends AppCompatActivity
                 nDialog.cancel();
             }
             if (resultCode == RESULT_CANCELED) {
+                nDialog.cancel();
+            }
+        }
+
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                Uri resultUri = result.getUri();
+                Picasso.get().load(resultUri).fit().centerCrop().into(imageViewEventPhoto);
+                nDialog.cancel();
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+                showSnackBar(this, "Couldn't set Image.");
+                nDialog.cancel();
+            }
+            else {
                 nDialog.cancel();
             }
         }
