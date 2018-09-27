@@ -15,7 +15,6 @@ public class Event {
     private String      actualNumberOfAttendees;
     private double      startDateTime;
     private double      endDatetime;
-    private double      untilDateTime;
     private boolean     isRecurrent;
     private boolean     isOnMonday;
     private boolean     isOnTuesday;
@@ -24,8 +23,6 @@ public class Event {
     private boolean     isOnFriday;
     private boolean     isOnSaturday;
     private boolean     isOnSunday;
-    private boolean     isDaily;
-    private boolean     isWeekly;
     private String      locationName;
     private double      locationLatitude;
     private double      locationLongitude;
@@ -47,8 +44,8 @@ public class Event {
     private String      organizer;
     private boolean     isPrivate;
     private boolean     isCorporate;
-    private boolean     corporateName;
     private String      corporateId;
+    private boolean     corporateName;
 
     public Event(){}
 
@@ -132,14 +129,6 @@ public class Event {
         this.endDatetime = endDatetime;
     }
 
-    public double getUntilDateTime() {
-        return untilDateTime;
-    }
-
-    public void setUntilDateTime(double untilDateTime) {
-        this.untilDateTime = untilDateTime;
-    }
-
     public boolean isRecurrent() {
         return isRecurrent;
     }
@@ -202,22 +191,6 @@ public class Event {
 
     public void setOnSunday(boolean onSunday) {
         isOnSunday = onSunday;
-    }
-
-    public boolean isDaily() {
-        return isDaily;
-    }
-
-    public void setDaily(boolean daily) {
-        isDaily = daily;
-    }
-
-    public boolean isWeekly() {
-        return isWeekly;
-    }
-
-    public void setWeekly(boolean weekly) {
-        isWeekly = weekly;
     }
 
     public String getLocationName() {

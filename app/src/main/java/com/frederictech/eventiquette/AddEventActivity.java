@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,11 +22,9 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-
-import com.fxn.pix.Pix;
-import com.fxn.utility.PermUtil;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -59,8 +58,6 @@ public class AddEventActivity extends AppCompatActivity
 
     int PLACE_PICKER_REQUEST = 200;
     int READ_REQUEST_CODE = 300;
-    int PIX_REQUEST_CODE = 400;
-    int NUMBER_OF_PIX_TO_SELECT = 4;
 
     Context context;
 
@@ -68,11 +65,12 @@ public class AddEventActivity extends AppCompatActivity
     GoogleMap map;
     Marker mNDUFacultyOfScienceMarker;
     Marker mUserLocationMarker;
-    Drawable initialBtnSelectLocationBackgroundDrawable;
     ProgressDialog nDialog;
 
     LatLng userSelectedPlaceLatLng = null;
 
+    TextView textViewMapsError;
+    TextView textViewPickDayError;
     EditText editTextEventTitle;
     EditText editTextEventShortDescription;
     EditText editTextEventDescription;
@@ -119,6 +117,8 @@ public class AddEventActivity extends AppCompatActivity
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        textViewMapsError = (TextView) findViewById(R.id.text_view_map_error);
+        textViewPickDayError = (TextView) findViewById(R.id.text_view_pick_day_error);
         editTextEventLocationName = (EditText) findViewById(R.id.edit_event_location);
         textViewStartDatePicker = (com.rengwuxian.materialedittext.MaterialEditText) findViewById(R.id.text_event_start_date_picker);
         textViewEndDatePicker = (com.rengwuxian.materialedittext.MaterialEditText) findViewById(R.id.text_event_end_date_picker);
@@ -190,14 +190,15 @@ public class AddEventActivity extends AppCompatActivity
                             @Override
                             public void onItemSelected(int position, RecurrenceTypeOptions item) {
                                 textViewRecurrenceType.setText(item.recurrenceType);
-                                if(Objects.equals(item.recurrenceType, "Once")){
+                                if (Objects.equals(item.recurrenceType, "Once")) {
+                                    textViewPickDayError.setVisibility(View.GONE);
                                     HideRecurrentEventSection();
                                     textViewStartDatePicker.setText("");
                                     textViewEndDatePicker.setEnabled(false);
                                     textViewEndDatePicker.setHint("End Date and Time");
                                     textViewEndDatePicker.setText("");
                                     textViewRecurrenceType.setEnabled(true);
-                                } else if(Objects.equals(item.recurrenceType, "Weekly")){
+                                } else if (Objects.equals(item.recurrenceType, "Weekly")) {
                                     ShowRecurrentEventSection();
                                     textViewRecurrenceType.setEnabled(true);
                                     textViewStartDatePicker.setText("");
@@ -214,7 +215,7 @@ public class AddEventActivity extends AppCompatActivity
         textViewEventType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                textViewRecurrenceType.setEnabled(false);
+                textViewEventType.setEnabled(false);
                 ArrayAdapter<RecurrenceTypeOptions> adapter = new RecurrenceTypeAdapter(context, loadEventTypeOptions());
                 new LovelyChoiceDialog(context)
                         .setTopColorRes(R.color.colorAccent)
@@ -225,7 +226,7 @@ public class AddEventActivity extends AppCompatActivity
                             @Override
                             public void onItemSelected(int position, RecurrenceTypeOptions item) {
                                 textViewEventType.setText(item.recurrenceType);
-                                textViewRecurrenceType.setEnabled(true);
+                                textViewEventType.setEnabled(true);
                             }
                         })
                         .show();
@@ -290,7 +291,7 @@ public class AddEventActivity extends AppCompatActivity
         muliselectGroupWeekdays.setVisibility(View.GONE);
     }
 
-    private void PerformFileSearch(){
+    private void PerformFileSearch() {
         CropImage.activity()
                 .setGuidelines(CropImageView.Guidelines.ON)
                 .setAspectRatio(16, 9)
@@ -391,7 +392,7 @@ public class AddEventActivity extends AppCompatActivity
                 // Date is get on positive button click
                 if (date.before(eventStartDate)) {
                     eventEndDate = null;
-                    showSnackBar(AddEventActivity.this,"Event End Date can't be before it's Start Date.");
+                    showSnackBar(AddEventActivity.this, "Event End Date can't be before it's Start Date.");
                 } else {
                     eventEndDate = date;
                     textViewEndDatePicker.setText(myDateFormat.format(date));
@@ -441,14 +442,17 @@ public class AddEventActivity extends AppCompatActivity
         boolean isValid = true;
         Event userEvent = new Event();
 
-        if (userSelectedPlaceLatLng != null){
+        if (userSelectedPlaceLatLng != null) {
+            textViewMapsError.setVisibility(View.GONE);
             userEvent.setLocationLatitude(userSelectedPlaceLatLng.latitude);
             userEvent.setLocationLongitude(userSelectedPlaceLatLng.longitude);
         } else {
+            textViewMapsError.setTextColor(Color.RED);
+            textViewMapsError.setVisibility(View.VISIBLE);
             isValid = false;
         }
 
-        if (editTextEventTitle != null && !editTextEventTitle.getText().toString().trim().equals("") ) {
+        if (editTextEventTitle != null && !editTextEventTitle.getText().toString().trim().equals("")) {
             userEvent.setTitle(editTextEventTitle.getText().toString().trim());
             editTextEventTitle.setError(null);
         } else {
@@ -456,7 +460,7 @@ public class AddEventActivity extends AppCompatActivity
             editTextEventTitle.setError("This field can't be Empty");
         }
 
-        if (editTextEventLocationName != null && !editTextEventLocationName.getText().toString().trim().equals("") ) {
+        if (editTextEventLocationName != null && !editTextEventLocationName.getText().toString().trim().equals("")) {
             userEvent.setLocationName(editTextEventLocationName.getText().toString().trim());
             editTextEventLocationName.setError(null);
         } else {
@@ -464,7 +468,23 @@ public class AddEventActivity extends AppCompatActivity
             editTextEventLocationName.setError("This field can't be Empty");
         }
 
-        if (editTextEventShortDescription != null && !editTextEventShortDescription.getText().toString().trim().equals("") ) {
+        if (editTextEventReservationNumber != null && !editTextEventReservationNumber.getText().toString().trim().equals("")) {
+            userEvent.setReservationNumber(editTextEventReservationNumber.getText().toString().trim());
+            editTextEventReservationNumber.setError(null);
+        } else {
+            isValid = false;
+            editTextEventReservationNumber.setError("This field can't be Empty");
+        }
+
+        if (textViewEventType != null && !textViewEventType.getText().toString().trim().equals("")) {
+            userEvent.setType(textViewEventType.getText().toString().trim());
+            textViewEventType.setError(null);
+        } else {
+            isValid = false;
+            textViewEventType.setError("This field can't be Empty");
+        }
+
+        if (editTextEventShortDescription != null && !editTextEventShortDescription.getText().toString().trim().equals("")) {
             userEvent.setShortDescription(editTextEventShortDescription.getText().toString().trim());
             editTextEventShortDescription.setError(null);
         } else {
@@ -472,7 +492,7 @@ public class AddEventActivity extends AppCompatActivity
             editTextEventShortDescription.setError("This field can't be Empty");
         }
 
-        if (editTextEventDescription != null && !editTextEventDescription.getText().toString().trim().equals("") ) {
+        if (editTextEventDescription != null && !editTextEventDescription.getText().toString().trim().equals("")) {
             userEvent.setDescription(editTextEventDescription.getText().toString().trim());
             editTextEventDescription.setError(null);
         } else {
@@ -480,16 +500,12 @@ public class AddEventActivity extends AppCompatActivity
             editTextEventDescription.setError("This field can't be Empty");
         }
 
-        if (editTextEventWebsite != null && !editTextEventWebsite.getText().toString().trim().equals("") ) {
-            userEvent.setUrl(editTextEventWebsite.getText().toString().trim());
-        }
-
-        if (eventStartDate != null) {
-            userEvent.setStartDateTime(eventStartDate.getTime());
-            textViewStartDatePicker.setError(null);
+        if (textViewRecurrenceType != null && !textViewRecurrenceType.getText().toString().trim().equals("")) {
+            userEvent.setRecurrent(Objects.equals(textViewRecurrenceType.getText().toString().trim(), "Weekly"));
+            textViewRecurrenceType.setError(null);
         } else {
-            textViewStartDatePicker.setError("Please Select a Date");
             isValid = false;
+            textViewRecurrenceType.setError("This field can't be Empty");
         }
 
         userEvent.setOnMonday(toggleIsMonday.isChecked());
@@ -500,39 +516,68 @@ public class AddEventActivity extends AppCompatActivity
         userEvent.setOnSaturday(toggleIsSaturday.isChecked());
         userEvent.setOnSunday(toggleIsSunday.isChecked());
 
-        if (editTextAgeLimit != null && !editTextAgeLimit.getText().toString().trim().equals("") ) {
-            try{
+        if (textViewRecurrenceType == null ||
+                !userEvent.isRecurrent() ||
+                (userEvent.isRecurrent()
+                        && (userEvent.isOnMonday() ||
+                        userEvent.isOnTuesday() ||
+                        userEvent.isOnWednesday() ||
+                        userEvent.isOnThursday() ||
+                        userEvent.isOnFriday() ||
+                        userEvent.isOnSaturday() ||
+                        userEvent.isOnSunday()))) {
+            textViewPickDayError.setVisibility(View.GONE);
+        } else {
+            isValid = false;
+            textViewPickDayError.setTextColor(Color.RED);
+            textViewPickDayError.setVisibility(View.VISIBLE);
+        }
+
+        if (eventStartDate != null) {
+            userEvent.setStartDateTime(eventStartDate.getTime());
+            textViewStartDatePicker.setError(null);
+        } else {
+            textViewStartDatePicker.setError("Please Select a Date");
+            isValid = false;
+        }
+
+        if (eventEndDate != null) {
+            userEvent.setStartDateTime(eventEndDate.getTime());
+            textViewEndDatePicker.setError(null);
+        } else {
+            textViewEndDatePicker.setError("Please Select a Date");
+            isValid = false;
+        }
+
+        if (editTextEventWebsite != null && !editTextEventWebsite.getText().toString().trim().equals("")) {
+            userEvent.setUrl(editTextEventWebsite.getText().toString().trim());
+        }
+
+        if (editTextAgeLimit != null && !editTextAgeLimit.getText().toString().trim().equals("")) {
+            try {
                 userEvent.setAgeLimit(Integer.parseInt(editTextAgeLimit.getText().toString().trim()));
-            } catch (Exception ex){
+            } catch (Exception ex) {
                 userEvent.setAgeLimit(0);
             }
         } else {
             userEvent.setAgeLimit(0);
         }
 
-        if (editTextEventReservationNumber != null && !editTextEventReservationNumber.getText().toString().trim().equals("") ) {
-            userEvent.setReservationNumber(editTextEventReservationNumber.getText().toString().trim());
-            editTextEventReservationNumber.setError(null);
-        } else {
-            isValid = false;
-            editTextEventReservationNumber.setError("This field can't be Empty");
-        }
-
-        if (editTextTicketingUrl != null && !editTextTicketingUrl.getText().toString().trim().equals("") ) {
+        if (editTextTicketingUrl != null && !editTextTicketingUrl.getText().toString().trim().equals("")) {
             userEvent.setTicketUrl(editTextTicketingUrl.getText().toString().trim());
         }
 
-        findViewById(R.id.action_submit).setEnabled(true);
-        nDialog.cancel();
-
         FirebaseAuth auth = FirebaseAuth.getInstance();
-        if (auth.getCurrentUser() != null){
+        if (auth.getCurrentUser() != null) {
             userEvent.setCreatedBy(auth.getCurrentUser().getUid());
         }
 
         userEvent.setCreatedDate(new Date().getTime());
 
-        if(isValid){
+        findViewById(R.id.action_submit).setEnabled(true);
+        nDialog.cancel();
+
+        if (isValid) {
             ShowConfirmationDialogue();
         }
     }
@@ -584,10 +629,11 @@ public class AddEventActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
+                textViewMapsError.setVisibility(View.GONE);
                 Place place = PlacePicker.getPlace(this, data);
                 userSelectedPlaceLatLng = place.getLatLng();
                 mNDUFacultyOfScienceMarker.remove();
-                if(mUserLocationMarker != null)
+                if (mUserLocationMarker != null)
                     mUserLocationMarker.remove();
                 mUserLocationMarker = map.addMarker(new MarkerOptions().position(place.getLatLng()));
                 map.moveCamera(CameraUpdateFactory.newLatLng(place.getLatLng()));
@@ -595,7 +641,7 @@ public class AddEventActivity extends AppCompatActivity
                 eventLocationMap.setClickable(true);
                 nDialog.cancel();
             }
-            if (resultCode == RESULT_CANCELED){
+            if (resultCode == RESULT_CANCELED) {
                 eventLocationMap.setClickable(true);
                 nDialog.cancel();
             }
@@ -630,14 +676,13 @@ public class AddEventActivity extends AppCompatActivity
                 Exception error = result.getError();
                 showSnackBar(this, "Couldn't set Image.");
                 nDialog.cancel();
-            }
-            else {
+            } else {
                 nDialog.cancel();
             }
         }
     }
 
-    public void showSnackBar(Activity activity, String message){
+    public void showSnackBar(Activity activity, String message) {
         View rootView = activity.getWindow().getDecorView().findViewById(android.R.id.content);
         Snackbar.make(rootView, message, Snackbar.LENGTH_LONG).show();
     }
@@ -665,21 +710,6 @@ public class AddEventActivity extends AppCompatActivity
     public void onLowMemory() {
         super.onLowMemory();
         eventLocationMap.onLowMemory();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case PermUtil.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Pix.start(AddEventActivity.this, PIX_REQUEST_CODE, NUMBER_OF_PIX_TO_SELECT);
-                } else {
-                    Toast.makeText(AddEventActivity.this, "Approve permissions to open Pix ImagePicker", Toast.LENGTH_LONG).show();
-                }
-                return;
-            }
-        }
     }
 
 }

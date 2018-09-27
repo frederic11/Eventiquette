@@ -23,6 +23,15 @@
 
         </com.google.android.gms.maps.MapView>
 
+        <TextView
+            android:id="@+id/text_view_map_error"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Please select a location by clicking on the Map."
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="18dp"
+            android:visibility="gone"/>
+
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/edit_event_title"
@@ -175,6 +184,16 @@
                 app:tbgMarkerColor="@color/colorAccent" />
 
         </com.nex3z.togglebuttongroup.MultiSelectToggleGroup>
+
+        <TextView
+            android:id="@+id/text_view_pick_day_error"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Please select one day at least."
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="18dp"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone"/>
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/text_event_start_date_picker"
