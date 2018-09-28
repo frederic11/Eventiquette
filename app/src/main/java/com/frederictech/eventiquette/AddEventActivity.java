@@ -5,11 +5,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -23,7 +22,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -36,7 +34,10 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment;
 import com.nex3z.togglebuttongroup.MultiSelectToggleGroup;
 import com.squareup.picasso.Picasso;
@@ -58,6 +59,10 @@ public class AddEventActivity extends AppCompatActivity
 
     int PLACE_PICKER_REQUEST = 200;
     int READ_REQUEST_CODE = 300;
+
+    FirebaseFirestore db;
+    static final String EVENTS_COLLECTION_FULL_DETAILS = "eventsCollectionFullDetails";
+    static final String EVENTS_DOCUMENT_FULL_DETAILS = "eventsDocumentFullDetails";
 
     Context context;
 
@@ -106,6 +111,9 @@ public class AddEventActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Add Event");
+
+        // Access a Cloud Firestore instance from your Activity
+        db = FirebaseFirestore.getInstance();
 
         context = this;
 
@@ -534,7 +542,7 @@ public class AddEventActivity extends AppCompatActivity
         }
 
         if (eventStartDate != null) {
-            userEvent.setStartDateTime(eventStartDate.getTime());
+            userEvent.setStartDateTime(eventStartDate);
             textViewStartDatePicker.setError(null);
         } else {
             textViewStartDatePicker.setError("Please Select a Date");
@@ -542,7 +550,7 @@ public class AddEventActivity extends AppCompatActivity
         }
 
         if (eventEndDate != null) {
-            userEvent.setStartDateTime(eventEndDate.getTime());
+            userEvent.setStartDateTime(eventEndDate);
             textViewEndDatePicker.setError(null);
         } else {
             textViewEndDatePicker.setError("Please Select a Date");
@@ -578,8 +586,26 @@ public class AddEventActivity extends AppCompatActivity
         nDialog.cancel();
 
         if (isValid) {
+            WriteFullEventDetailsToDatabase(userEvent);
             ShowConfirmationDialogue();
         }
+    }
+
+    private void WriteFullEventDetailsToDatabase(Event userEvent) {
+        db.collection(EVENTS_COLLECTION_FULL_DETAILS).document(EVENTS_DOCUMENT_FULL_DETAILS)
+                .set(userEvent)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("DB Write", "DocumentSnapshot successfully written!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("DB Write", "Error writing document", e);
+                    }
+                });
     }
 
     private void ShowConfirmationDialogue() {

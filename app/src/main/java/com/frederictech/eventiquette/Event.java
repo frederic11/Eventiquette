@@ -1,5 +1,7 @@
 package com.frederictech.eventiquette;
 
+import java.util.Date;
+
 /**
  * Created by Frederic on 25-03-2018.
  */
@@ -13,8 +15,8 @@ public class Event {
     private String      url;
     private String      numberOfPeopleInterested;
     private String      actualNumberOfAttendees;
-    private double      startDateTime;
-    private double      endDatetime;
+    private Date        startDateTime;
+    private Date        endDatetime;
     private boolean     isRecurrent;
     private boolean     isOnMonday;
     private boolean     isOnTuesday;
@@ -113,19 +115,19 @@ public class Event {
         this.actualNumberOfAttendees = actualNumberOfAttendees;
     }
 
-    public double getStartDateTime() {
+    public Date getStartDateTime() {
         return startDateTime;
     }
 
-    public void setStartDateTime(double startDateTime) {
+    public void setStartDateTime(Date startDateTime) {
         this.startDateTime = startDateTime;
     }
 
-    public double getEndDatetime() {
+    public Date getEndDatetime() {
         return endDatetime;
     }
 
-    public void setEndDatetime(double endDatetime) {
+    public void setEndDatetime(Date endDatetime) {
         this.endDatetime = endDatetime;
     }
 
