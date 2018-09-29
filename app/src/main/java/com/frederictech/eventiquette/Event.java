@@ -1,5 +1,7 @@
 package com.frederictech.eventiquette;
 
+import android.content.Intent;
+
 import java.util.Date;
 
 /**
@@ -13,8 +15,8 @@ public class Event {
     private String      description;
     private String      type;
     private String      url;
-    private String      numberOfPeopleInterested;
-    private String      actualNumberOfAttendees;
+    private Integer     numberOfPeopleInterested;
+    private Integer     actualNumberOfAttendees;
     private Date        startDateTime;
     private Date        endDatetime;
     private boolean     isRecurrent;
@@ -31,8 +33,8 @@ public class Event {
     private int         ageLimit;
     private String      reservationNumber;
     private String      ticketUrl;
-    private String      isApproved;
-    private String      isRejected;
+    private boolean     isApproved;
+    private boolean     isRejected;
     private boolean     isDeleted;
     private String      thumbnailUrl;
     private String      imageUrl;
@@ -40,14 +42,14 @@ public class Event {
     private boolean     isDuplicated;
     private boolean     isChangeDuplicated;
     private String      createdBy;
-    private double      createdDate;
+    private Date        createdDate;
     private String      modifiedBy;
-    private double      modifiedDate;
+    private Date        modifiedDate;
     private String      organizer;
     private boolean     isPrivate;
     private boolean     isCorporate;
     private String      corporateId;
-    private boolean     corporateName;
+    private String      corporateName;
 
     public Event(){}
 
@@ -97,22 +99,6 @@ public class Event {
 
     public void setUrl(String url) {
         this.url = url.substring(0, Math.min(url.length(), 50));
-    }
-
-    public String getNumberOfPeopleInterested() {
-        return numberOfPeopleInterested;
-    }
-
-    public void setNumberOfPeopleInterested(String numberOfPeopleInterested) {
-        this.numberOfPeopleInterested = numberOfPeopleInterested;
-    }
-
-    public String getActualNumberOfAttendees() {
-        return actualNumberOfAttendees;
-    }
-
-    public void setActualNumberOfAttendees(String actualNumberOfAttendees) {
-        this.actualNumberOfAttendees = actualNumberOfAttendees;
     }
 
     public Date getStartDateTime() {
@@ -246,22 +232,6 @@ public class Event {
         this.ticketUrl = ticketUrl.substring(0, Math.min(ticketUrl.length(), 50));
     }
 
-    public String getIsApproved() {
-        return isApproved;
-    }
-
-    public void setIsApproved(String isApproved) {
-        this.isApproved = isApproved;
-    }
-
-    public String getIsRejected() {
-        return isRejected;
-    }
-
-    public void setIsRejected(String isRejected) {
-        this.isRejected = isRejected;
-    }
-
     public boolean isDeleted() {
         return isDeleted;
     }
@@ -318,28 +288,12 @@ public class Event {
         this.createdBy = createdBy;
     }
 
-    public double getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(double createdDate) {
-        this.createdDate = createdDate;
-    }
-
     public String getModifiedBy() {
         return modifiedBy;
     }
 
     public void setModifiedBy(String modifiedBy) {
         this.modifiedBy = modifiedBy;
-    }
-
-    public double getModifiedDate() {
-        return modifiedDate;
-    }
-
-    public void setModifiedDate(double modifiedDate) {
-        this.modifiedDate = modifiedDate;
     }
 
     public String getOrganizer() {
@@ -366,19 +320,67 @@ public class Event {
         isCorporate = corporate;
     }
 
-    public boolean isCorporateName() {
-        return corporateName;
-    }
-
-    public void setCorporateName(boolean corporateName) {
-        this.corporateName = corporateName;
-    }
-
     public String getCorporateId() {
         return corporateId;
     }
 
     public void setCorporateId(String corporateId) {
         this.corporateId = corporateId;
+    }
+
+    public Integer getNumberOfPeopleInterested() {
+        return numberOfPeopleInterested;
+    }
+
+    public void setNumberOfPeopleInterested(Integer numberOfPeopleInterested) {
+        this.numberOfPeopleInterested = numberOfPeopleInterested;
+    }
+
+    public Integer getActualNumberOfAttendees() {
+        return actualNumberOfAttendees;
+    }
+
+    public void setActualNumberOfAttendees(Integer actualNumberOfAttendees) {
+        this.actualNumberOfAttendees = actualNumberOfAttendees;
+    }
+
+    public boolean isApproved() {
+        return isApproved;
+    }
+
+    public void setApproved(boolean approved) {
+        isApproved = approved;
+    }
+
+    public boolean isRejected() {
+        return isRejected;
+    }
+
+    public void setRejected(boolean rejected) {
+        isRejected = rejected;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Date getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public void setModifiedDate(Date modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+
+    public String getCorporateName() {
+        return corporateName;
+    }
+
+    public void setCorporateName(String corporateName) {
+        this.corporateName = corporateName;
     }
 }

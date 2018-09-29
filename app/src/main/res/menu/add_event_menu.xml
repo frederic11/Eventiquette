@@ -6,4 +6,10 @@
         android:orderInCategory="100"
         android:title="SUBMIT"
         app:showAsAction="always|withText" />
+
+    <item
+        android:id="@+id/action_save_template"
+        android:orderInCategory="101"
+        android:title="Save as Template"
+        app:showAsAction="never" />
 </menu>

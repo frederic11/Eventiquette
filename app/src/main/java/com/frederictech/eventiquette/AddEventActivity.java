@@ -37,6 +37,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment;
 import com.nex3z.togglebuttongroup.MultiSelectToggleGroup;
@@ -62,7 +63,7 @@ public class AddEventActivity extends AppCompatActivity
 
     FirebaseFirestore db;
     static final String EVENTS_COLLECTION_FULL_DETAILS = "eventsCollectionFullDetails";
-    static final String EVENTS_DOCUMENT_FULL_DETAILS = "eventsDocumentFullDetails";
+    static final String EVENTS_COLLECTION_TEMPLATES = "eventsCollectionTemplates";
 
     Context context;
 
@@ -443,11 +444,19 @@ public class AddEventActivity extends AppCompatActivity
             return true;
         }
 
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_save_template) {
+            nDialog.show();
+            SaveEventAsTemplate();
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
     private void SubmitEventForApproval() {
         boolean isValid = true;
+        boolean isTemplate = false;
         Event userEvent = new Event();
 
         if (userSelectedPlaceLatLng != null) {
@@ -550,7 +559,7 @@ public class AddEventActivity extends AppCompatActivity
         }
 
         if (eventEndDate != null) {
-            userEvent.setStartDateTime(eventEndDate);
+            userEvent.setEndDatetime(eventEndDate);
             textViewEndDatePicker.setError(null);
         } else {
             textViewEndDatePicker.setError("Please Select a Date");
@@ -575,29 +584,165 @@ public class AddEventActivity extends AppCompatActivity
             userEvent.setTicketUrl(editTextTicketingUrl.getText().toString().trim());
         }
 
+        if (textViewEventPrivacy != null && !textViewEventPrivacy.getText().toString().trim().equals("")) {
+            userEvent.setPrivate(Objects.equals(textViewEventPrivacy.getText().toString().trim(), "Private"));
+            textViewEventPrivacy.setError(null);
+        } else {
+            isValid = false;
+            textViewEventPrivacy.setError("This field can't be Empty");
+        }
+
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
             userEvent.setCreatedBy(auth.getCurrentUser().getUid());
+        }else {
+            isValid = false;
         }
 
-        userEvent.setCreatedDate(new Date().getTime());
+        userEvent.setCreatedDate(new Date());
+        userEvent.setSource(getPackageName());
+
+        //ToDo: Remove auto-approve
+        userEvent.setApproved(true);
 
         findViewById(R.id.action_submit).setEnabled(true);
         nDialog.cancel();
 
         if (isValid) {
-            WriteFullEventDetailsToDatabase(userEvent);
+            WriteFullEventDetailsToDatabase(userEvent, isTemplate);
             ShowConfirmationDialogue();
         }
     }
 
-    private void WriteFullEventDetailsToDatabase(Event userEvent) {
-        db.collection(EVENTS_COLLECTION_FULL_DETAILS).document(EVENTS_DOCUMENT_FULL_DETAILS)
-                .set(userEvent)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
+    private void SaveEventAsTemplate() {
+        Event userEvent = new Event();
+        boolean isValid = true;
+        boolean isTemplate = true;
+
+        if (userSelectedPlaceLatLng != null) {
+            textViewMapsError.setVisibility(View.GONE);
+            userEvent.setLocationLatitude(userSelectedPlaceLatLng.latitude);
+            userEvent.setLocationLongitude(userSelectedPlaceLatLng.longitude);
+        }
+
+        if (editTextEventTitle != null && !editTextEventTitle.getText().toString().trim().equals("")) {
+            userEvent.setTitle(editTextEventTitle.getText().toString().trim());
+            editTextEventTitle.setError(null);
+        } else {
+            isValid = false;
+            editTextEventTitle.setError("This field can't be Empty");
+        }
+
+        if (editTextEventLocationName != null && !editTextEventLocationName.getText().toString().trim().equals("")) {
+            userEvent.setLocationName(editTextEventLocationName.getText().toString().trim());
+            editTextEventLocationName.setError(null);
+        }
+
+        if (editTextEventReservationNumber != null && !editTextEventReservationNumber.getText().toString().trim().equals("")) {
+            userEvent.setReservationNumber(editTextEventReservationNumber.getText().toString().trim());
+            editTextEventReservationNumber.setError(null);
+        }
+
+        if (textViewEventType != null && !textViewEventType.getText().toString().trim().equals("")) {
+            userEvent.setType(textViewEventType.getText().toString().trim());
+            textViewEventType.setError(null);
+        }
+
+        if (editTextEventShortDescription != null && !editTextEventShortDescription.getText().toString().trim().equals("")) {
+            userEvent.setShortDescription(editTextEventShortDescription.getText().toString().trim());
+            editTextEventShortDescription.setError(null);
+        }
+
+        if (editTextEventDescription != null && !editTextEventDescription.getText().toString().trim().equals("")) {
+            userEvent.setDescription(editTextEventDescription.getText().toString().trim());
+            editTextEventDescription.setError(null);
+        }
+
+        if (textViewRecurrenceType != null && !textViewRecurrenceType.getText().toString().trim().equals("")) {
+            userEvent.setRecurrent(Objects.equals(textViewRecurrenceType.getText().toString().trim(), "Weekly"));
+            textViewRecurrenceType.setError(null);
+        }
+
+        userEvent.setOnMonday(toggleIsMonday.isChecked());
+        userEvent.setOnTuesday(toggleIsTuesday.isChecked());
+        userEvent.setOnWednesday(toggleIsWednesday.isChecked());
+        userEvent.setOnThursday(toggleIsThursday.isChecked());
+        userEvent.setOnFriday(toggleIsFriday.isChecked());
+        userEvent.setOnSaturday(toggleIsSaturday.isChecked());
+        userEvent.setOnSunday(toggleIsSunday.isChecked());
+
+        if (textViewRecurrenceType == null ||
+                !userEvent.isRecurrent() ||
+                (userEvent.isRecurrent()
+                        && (userEvent.isOnMonday() ||
+                        userEvent.isOnTuesday() ||
+                        userEvent.isOnWednesday() ||
+                        userEvent.isOnThursday() ||
+                        userEvent.isOnFriday() ||
+                        userEvent.isOnSaturday() ||
+                        userEvent.isOnSunday()))) {
+            textViewPickDayError.setVisibility(View.GONE);
+        }
+
+        if (eventStartDate != null) {
+            userEvent.setStartDateTime(eventStartDate);
+            textViewStartDatePicker.setError(null);
+        }
+
+        if (eventEndDate != null) {
+            userEvent.setEndDatetime(eventEndDate);
+            textViewEndDatePicker.setError(null);
+        }
+
+        if (editTextEventWebsite != null && !editTextEventWebsite.getText().toString().trim().equals("")) {
+            userEvent.setUrl(editTextEventWebsite.getText().toString().trim());
+        }
+
+        if (editTextAgeLimit != null && !editTextAgeLimit.getText().toString().trim().equals("")) {
+            try {
+                userEvent.setAgeLimit(Integer.parseInt(editTextAgeLimit.getText().toString().trim()));
+            } catch (Exception ex) {
+                userEvent.setAgeLimit(0);
+            }
+        } else {
+            userEvent.setAgeLimit(0);
+        }
+
+        if (editTextTicketingUrl != null && !editTextTicketingUrl.getText().toString().trim().equals("")) {
+            userEvent.setTicketUrl(editTextTicketingUrl.getText().toString().trim());
+        }
+
+        if (textViewEventPrivacy != null && !textViewEventPrivacy.getText().toString().trim().equals("")) {
+            userEvent.setPrivate(Objects.equals(textViewEventPrivacy.getText().toString().trim(), "Private"));
+            textViewEventPrivacy.setError(null);
+        }
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() != null) {
+            userEvent.setCreatedBy(auth.getCurrentUser().getUid());
+        }
+
+        userEvent.setCreatedDate(new Date());
+        userEvent.setSource(getPackageName());
+
+        //findViewById(R.id.action_save_template).setEnabled(true);
+        nDialog.cancel();
+
+
+        if (isValid) {
+            WriteFullEventDetailsToDatabase(userEvent, isTemplate);
+            ShowTemplateSaveConfirmationDialogue();
+        }
+    }
+
+    private void WriteFullEventDetailsToDatabase(final Event userEvent, boolean isTemplate) {
+        db.collection(isTemplate ? EVENTS_COLLECTION_TEMPLATES : EVENTS_COLLECTION_FULL_DETAILS )
+                .add(userEvent)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("DB Write", "DocumentSnapshot successfully written!");
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d("DB Write", "DocumentSnapshot successfully written with ID:"
+                                + documentReference.getId());
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -612,8 +757,37 @@ public class AddEventActivity extends AppCompatActivity
         AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(context);
         builder.setTitle("Event Submitted for Approval")
+                .setCancelable(false)
                 .setMessage("Thank you for creating an Event. Your Event has been submitted for approval.\n\n" +
                         "You will receive a notification when this Event gets Accepted or Rejected.")
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .show();
+    }
+
+    private void ShowTemplateSaveConfirmationDialogue() {
+        AlertDialog.Builder builder;
+        builder = new AlertDialog.Builder(context);
+        builder.setTitle("Event Submitted for Approval")
+                .setCancelable(false)
+                .setMessage("Your Template has been successfully Saved.")
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .show();
+    }
+
+    private void ShowEventFailedToWriteDialogue() {
+        AlertDialog.Builder builder;
+        builder = new AlertDialog.Builder(context);
+        builder.setTitle("Event Submission Failed")
+                .setCancelable(false)
+                .setMessage("Oops! Something went wrong. Please try again later.")
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // do nothing
