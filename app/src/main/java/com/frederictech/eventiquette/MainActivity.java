@@ -113,7 +113,12 @@ public class MainActivity extends AppCompatActivity
             fab.setEnabled(false);
             nDialog.show();
             startActivity(new Intent(MainActivity.this, AddEventActivity.class));
-        } else if (id == R.id.nav_camera) {
+        } else if (id == R.id.nav_add_event_from_template) {
+            fab.setEnabled(false);
+            nDialog.show();
+            startActivity(new Intent(MainActivity.this, EventTemplatesActivity.class));
+        }
+        else if (id == R.id.nav_camera) {
             // Handle the camera action
         }else if (id == R.id.nav_gallery) {
 

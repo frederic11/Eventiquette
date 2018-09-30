@@ -66,6 +66,7 @@ public class Event {
     }
 
     public void setTitle(String title) {
+        if(title != null)
         this.title = title.substring(0, Math.min(title.length(), 100));
     }
 
@@ -74,6 +75,7 @@ public class Event {
     }
 
     public void setShortDescription(String shortDescription) {
+        if(shortDescription != null)
         this.shortDescription = shortDescription.substring(0, Math.min(shortDescription.length(), 140));
     }
 
@@ -82,6 +84,7 @@ public class Event {
     }
 
     public void setDescription(String description) {
+        if(description != null)
         this.description = description.substring(0, Math.min(description.length(), 4000));
     }
 
@@ -98,6 +101,7 @@ public class Event {
     }
 
     public void setUrl(String url) {
+        if(url != null)
         this.url = url.substring(0, Math.min(url.length(), 50));
     }
 
@@ -186,6 +190,7 @@ public class Event {
     }
 
     public void setLocationName(String locationName) {
+        if(locationName != null)
         this.locationName = locationName.substring(0, Math.min(locationName.length(), 100));
     }
 
@@ -229,6 +234,7 @@ public class Event {
     }
 
     public void setTicketUrl(String ticketUrl) {
+        if(ticketUrl != null)
         this.ticketUrl = ticketUrl.substring(0, Math.min(ticketUrl.length(), 50));
     }
 
