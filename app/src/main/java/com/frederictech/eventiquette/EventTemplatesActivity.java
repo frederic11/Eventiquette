@@ -1,9 +1,11 @@
 package com.frederictech.eventiquette;
 
 import android.app.ActionBar;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -25,6 +27,8 @@ public class EventTemplatesActivity extends AppCompatActivity {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
+    Context context = this;
+
     FirebaseFirestore db;
     static final String EVENTS_COLLECTION_TEMPLATES = "eventsCollectionTemplates";
 
@@ -37,6 +41,9 @@ public class EventTemplatesActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         mRecyclerView = (RecyclerView) findViewById(R.id.event_templates_recycler_view);
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(context, DividerItemDecoration.VERTICAL);
+        mRecyclerView.addItemDecoration(dividerItemDecoration);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView

@@ -1,11 +1,17 @@
 package com.frederictech.eventiquette;
 
+import android.content.Context;
+import android.media.Image;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -20,6 +26,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             mTemplateTitle = (TextView) view.findViewById(R.id.text_view_template_title);
             mTemplateDescriptiom = (TextView) view.findViewById(R.id.text_view_template_short_description);
             mTemplateCreatedDate = (TextView) view.findViewById(R.id.text_view_template_created_date);
+
         }
     }
 
@@ -35,6 +42,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         // create a new view
         LinearLayout v = (LinearLayout) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_event_templates, parent, false);
+
         MyViewHolder vh = new MyViewHolder(v);
         return vh;
     }
@@ -47,7 +55,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         holder.mTemplateTitle.setText(mDataset.get(position).getTitle());
         holder.mTemplateDescriptiom.setText(mDataset.get(position).getShortDescription());
         holder.mTemplateCreatedDate.setText(mDataset.get(position).getCreatedDate().toString());
-
     }
 
     // Return the size of your dataset (invoked by the layout manager)
