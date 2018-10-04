@@ -56,6 +56,7 @@ public class EventTemplatesActivity extends AppCompatActivity {
         final ArrayList myEventsTemplates = new ArrayList();
 
         db.collection(EVENTS_COLLECTION_TEMPLATES)
+                .orderBy("createdDate")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -63,11 +64,13 @@ public class EventTemplatesActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d("DB GET", document.getId() + " => " + document.getData());
-                                myEventsTemplates.add(document.toObject(Event.class));
+                                Event myEvent = document.toObject(Event.class);
+                                myEvent.setEventId(document.getId());
+                                myEventsTemplates.add(myEvent);
                             }
 
                             // specify an adapter
-                            mAdapter = new MyAdapter(myEventsTemplates);
+                            mAdapter = new MyAdapter(myEventsTemplates, context);
                             mRecyclerView.setAdapter(mAdapter);
                         } else {
                             Log.d("DB GET", "Error getting documents: ", task.getException());

@@ -54,7 +54,8 @@
             android:name=".EventTemplatesActivity"
             android:label="@string/title_activity_event_templates"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:noHistory="true">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.frederictech.eventiquette.MainActivity" />

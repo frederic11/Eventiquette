@@ -34,11 +34,16 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment;
 import com.nex3z.togglebuttongroup.MultiSelectToggleGroup;
 import com.squareup.picasso.Picasso;
@@ -263,6 +268,44 @@ public class AddEventActivity extends AppCompatActivity
         });
 
         Picasso.get().load(R.drawable.click_to_add_image).fit().centerCrop().into(imageViewEventPhoto);
+
+
+
+        final String eventIdFromTemplateActivity;
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if(extras == null) {
+                eventIdFromTemplateActivity = null;
+            } else {
+                eventIdFromTemplateActivity = extras.getString("TEMPLATE_EVENT_ID");
+            }
+        } else {
+            eventIdFromTemplateActivity= (String) savedInstanceState.getSerializable("TEMPLATE_EVENT_ID");
+        }
+
+        if (eventIdFromTemplateActivity != null){
+           nDialog.show();
+            db.collection(EVENTS_COLLECTION_TEMPLATES)
+                    .document(eventIdFromTemplateActivity)
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            Log.d("Get Event", "DocumentSnapshot data: " + documentSnapshot.getId());
+                            Event myEvent = documentSnapshot.toObject(Event.class);
+                            showSnackBar(AddEventActivity.this, eventIdFromTemplateActivity);
+                            editTextEventTitle.setText(myEvent.getTitle());
+                            nDialog.cancel();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            showSnackBar(AddEventActivity.this, "Oops! Something Went Wrong");
+                            nDialog.cancel();
+                        }
+                    });
+        }
     }
 
     private List<RecurrenceTypeOptions> loadRecurrenceOptions() {
