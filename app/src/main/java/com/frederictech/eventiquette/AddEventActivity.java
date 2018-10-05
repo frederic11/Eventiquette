@@ -293,8 +293,49 @@ public class AddEventActivity extends AppCompatActivity
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
                             Log.d("Get Event", "DocumentSnapshot data: " + documentSnapshot.getId());
                             Event myEvent = documentSnapshot.toObject(Event.class);
-                            showSnackBar(AddEventActivity.this, eventIdFromTemplateActivity);
+
+                            if(myEvent.getLocationLatitude() != 0 || myEvent.getLocationLongitude() != 0) {
+                                userSelectedPlaceLatLng = new LatLng(myEvent.getLocationLatitude(), myEvent.getLocationLongitude());
+                                if (mNDUFacultyOfScienceMarker != null)
+                                    mNDUFacultyOfScienceMarker.remove();
+                                if (mUserLocationMarker != null)
+                                    mUserLocationMarker.remove();
+                                mUserLocationMarker = map.addMarker(new MarkerOptions().position(userSelectedPlaceLatLng));
+                                map.moveCamera(CameraUpdateFactory.newLatLng(userSelectedPlaceLatLng));
+                            }
+
                             editTextEventTitle.setText(myEvent.getTitle());
+                            editTextEventLocationName.setText(myEvent.getLocationName());
+                            textViewRecurrenceType.setText("");
+                            if(myEvent.isRecurrent()){
+                                textViewRecurrenceType.setText("Weekly");
+                            } else if(!myEvent.isRecurrent()){
+                                textViewRecurrenceType.setText("Once");
+                            }
+                            textViewEventType.setText(myEvent.getType());
+                            textViewEventPrivacy.setText("");
+                            if(myEvent.isPrivate()){
+                                textViewEventPrivacy.setText("Private");
+                            }else if(!myEvent.isPrivate()){
+                                textViewEventPrivacy.setText("Public");
+                            }
+                            if(myEvent.isRecurrent()){
+                                muliselectGroupWeekdays.setVisibility(View.VISIBLE);
+                                textViewEndDatePicker.setHint("Until");
+                            }
+                            editTextEventReservationNumber.setText(myEvent.getReservationNumber());
+                            editTextEventShortDescription.setText(myEvent.getShortDescription());
+                            editTextEventDescription.setText(myEvent.getDescription());
+                            editTextEventWebsite.setText(myEvent.getUrl());
+                            toggleIsMonday.setChecked(myEvent.isOnMonday());
+                            toggleIsTuesday.setChecked(myEvent.isOnTuesday());
+                            toggleIsWednesday.setChecked(myEvent.isOnWednesday());
+                            toggleIsThursday.setChecked(myEvent.isOnThursday());
+                            toggleIsFriday.setChecked(myEvent.isOnFriday());
+                            toggleIsSaturday.setChecked(myEvent.isOnSaturday());
+                            toggleIsSunday.setChecked(myEvent.isOnSunday());
+                            editTextAgeLimit.setText(Integer.toString(myEvent.getAgeLimit()));
+                            editTextTicketingUrl.setText(myEvent.getTicketUrl());
                             nDialog.cancel();
                         }
                     })
@@ -424,10 +465,14 @@ public class AddEventActivity extends AppCompatActivity
 
         final SimpleDateFormat myDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm", java.util.Locale.getDefault());
         // Assign values
-        dateTimeDialogFragment.startAtTimeView();
+        if(Objects.equals(textViewRecurrenceType.getText().toString().trim(), "Weekly")){
+            dateTimeDialogFragment.startAtCalendarView();
+        } else{
+            dateTimeDialogFragment.startAtTimeView();
+        }
         dateTimeDialogFragment.set24HoursMode(false);
         dateTimeDialogFragment.setMinimumDateTime(cal2.getTime());//eventStartDate + 15 minutes
-        dateTimeDialogFragment.setMaximumDateTime(new GregorianCalendar(2050, Calendar.DECEMBER, 31).getTime());
+        dateTimeDialogFragment.setMaximumDateTime(new GregorianCalendar(2030, Calendar.DECEMBER, 31).getTime());
         dateTimeDialogFragment.setDefaultDateTime(cal.getTime()); //eventStartDate + One hour
 
         // Define new day and month format

@@ -230,12 +230,14 @@
             android:layout_marginBottom="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:hint="Website"
+            android:hint="Website (Optional)"
             android:inputType="textUri"
             android:maxLength="140"
             app:met_maxCharacters="140"
             app:met_singleLineEllipsis="true"
-            app:met_iconLeft="@drawable/baseline_web_black_36dp" />
+            app:met_iconLeft="@drawable/baseline_web_black_36dp"
+            app:met_helperText="Optional"
+            app:met_helperTextAlwaysShown="true"/>
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/edit_event_age_limit"
@@ -257,7 +259,7 @@
             android:layout_marginBottom="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:hint="Tickets Link"
+            android:hint="Tickets Link (Optional)"
             android:inputType="textUri"
             android:maxLength="140"
             app:met_singleLineEllipsis="true"

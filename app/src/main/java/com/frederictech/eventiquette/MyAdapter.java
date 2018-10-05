@@ -7,10 +7,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.security.PublicKey;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
@@ -20,7 +24,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     boolean isClickable = true;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public  LinearLayout mLinearLayout;
+        public LinearLayout mLinearLayout;
         public TextView mTemplateTitle, mTemplateEventId, mTemplateCreatedDate;
 
         public MyViewHolder(View view) {
@@ -57,7 +61,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         // - replace the contents of the view with that element
         holder.mTemplateTitle.setText(mDataset.get(position).getTitle());
         holder.mTemplateEventId.setText(mDataset.get(position).getEventId());
-        holder.mTemplateCreatedDate.setText(mDataset.get(position).getCreatedDate().toString());
+        holder.mTemplateCreatedDate.setText(new SimpleDateFormat("dd-MM-yyyy hh:mm a").format(mDataset.get(position).getCreatedDate()));
 
         holder.mLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
