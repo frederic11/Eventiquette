@@ -32,7 +32,6 @@
     </style>
 
     <style name="AppTheme.NoActionBar">
-        <item name="coordinatorLayoutStyle">@style/Widget.Design.CoordinatorLayout</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
