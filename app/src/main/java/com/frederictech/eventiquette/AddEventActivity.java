@@ -39,9 +39,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment;
@@ -50,6 +52,8 @@ import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 import com.yarolegovich.lovelydialog.LovelyChoiceDialog;
+
+import org.imperiumlabs.geofirestore.GeoFirestore;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -67,8 +71,11 @@ public class AddEventActivity extends AppCompatActivity
     int READ_REQUEST_CODE = 300;
 
     FirebaseFirestore db;
+    CollectionReference geoFirestoreRef;
+    GeoFirestore geoFirestore;
     static final String EVENTS_COLLECTION_FULL_DETAILS = "eventsCollectionFullDetails";
     static final String EVENTS_COLLECTION_TEMPLATES = "eventsCollectionTemplates";
+    static final String EVENTS_COLLECTION_FULL_DETAILS_GEO = "eventsCollectionFullDetailsGeo";
 
     Context context;
 
@@ -120,6 +127,8 @@ public class AddEventActivity extends AppCompatActivity
 
         // Access a Cloud Firestore instance from your Activity
         db = FirebaseFirestore.getInstance();
+        geoFirestoreRef = db.collection(EVENTS_COLLECTION_FULL_DETAILS_GEO);
+        geoFirestore = new GeoFirestore(geoFirestoreRef);
 
         context = this;
 
@@ -831,6 +840,7 @@ public class AddEventActivity extends AppCompatActivity
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d("DB Write", "DocumentSnapshot successfully written with ID:"
                                 + documentReference.getId());
+                        WriteFullGeoEventDetails(documentReference.getId(), userEvent);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -839,6 +849,19 @@ public class AddEventActivity extends AppCompatActivity
                         Log.w("DB Write", "Error writing document", e);
                     }
                 });
+    }
+
+    private void WriteFullGeoEventDetails(String eventId, Event userEvent){
+        if(eventId != null || eventId != ""){
+            geoFirestore.setLocation(eventId, new GeoPoint(userEvent.getLocationLatitude(), userEvent.getLocationLongitude()), new GeoFirestore.CompletionListener() {
+                @Override
+                public void onComplete(Exception exception) {
+                    if (exception == null){
+                        Log.d("DB GEO Write","Location saved successfully!");
+                    }
+                }
+            });
+        }
     }
 
     private void ShowConfirmationDialogue() {
